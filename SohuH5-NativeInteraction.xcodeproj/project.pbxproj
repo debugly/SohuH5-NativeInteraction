@@ -1,0 +1,422 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		B4E496351FA198E500583742 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E496341FA198E500583742 /* AppDelegate.m */; };
+		B4E496381FA198E500583742 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E496371FA198E500583742 /* ViewController.m */; };
+		B4E4963B1FA198E500583742 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B4E496391FA198E500583742 /* Main.storyboard */; };
+		B4E4963D1FA198E500583742 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B4E4963C1FA198E500583742 /* Assets.xcassets */; };
+		B4E496401FA198E500583742 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B4E4963E1FA198E500583742 /* LaunchScreen.storyboard */; };
+		B4E496431FA198E500583742 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E496421FA198E500583742 /* main.m */; };
+		B4E496551FA1B28A00583742 /* SHWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E4964B1FA1B28A00583742 /* SHWebView.m */; };
+		B4E496561FA1B28A00583742 /* SHWebViewJS.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E4964F1FA1B28A00583742 /* SHWebViewJS.m */; };
+		B4E496571FA1B28A00583742 /* SHWKWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E496501FA1B28A00583742 /* SHWKWebView.m */; };
+		B4E496581FA1B28A00583742 /* SHUIWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E496521FA1B28A00583742 /* SHUIWebView.m */; };
+		B4E496591FA1B28A00583742 /* SHWebViewJSBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E496531FA1B28A00583742 /* SHWebViewJSBridge.m */; };
+		B4E4965D1FA1B7B000583742 /* SHWeakProxy.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E4965B1FA1B7B000583742 /* SHWeakProxy.m */; };
+		B4E496601FA1BC0200583742 /* ExampleApp.html in Resources */ = {isa = PBXBuildFile; fileRef = B4E4965F1FA1BC0200583742 /* ExampleApp.html */; };
+		B4E496631FA1DAF600583742 /* SHLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E496621FA1DAF600583742 /* SHLoginViewController.m */; };
+		B4E496651FA1E11400583742 /* ReadMe.md in Resources */ = {isa = PBXBuildFile; fileRef = B4E496641FA1E11400583742 /* ReadMe.md */; };
+		B4E496681FA1F10B00583742 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4E496671FA1F0E700583742 /* WebKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		B4E496301FA198E500583742 /* SohuH5-NativeInteraction.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "SohuH5-NativeInteraction.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		B4E496331FA198E500583742 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		B4E496341FA198E500583742 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		B4E496361FA198E500583742 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		B4E496371FA198E500583742 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		B4E4963A1FA198E500583742 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		B4E4963C1FA198E500583742 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B4E4963F1FA198E500583742 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		B4E496411FA198E500583742 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		B4E496421FA198E500583742 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		B4E4964A1FA1B28A00583742 /* SHWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHWebView.h; sourceTree = "<group>"; };
+		B4E4964B1FA1B28A00583742 /* SHWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHWebView.m; sourceTree = "<group>"; };
+		B4E4964C1FA1B28A00583742 /* SHWKWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHWKWebView.h; sourceTree = "<group>"; };
+		B4E4964E1FA1B28A00583742 /* SHWebViewJS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHWebViewJS.h; sourceTree = "<group>"; };
+		B4E4964F1FA1B28A00583742 /* SHWebViewJS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHWebViewJS.m; sourceTree = "<group>"; };
+		B4E496501FA1B28A00583742 /* SHWKWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHWKWebView.m; sourceTree = "<group>"; };
+		B4E496511FA1B28A00583742 /* SHWebViewJSBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHWebViewJSBridge.h; sourceTree = "<group>"; };
+		B4E496521FA1B28A00583742 /* SHUIWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHUIWebView.m; sourceTree = "<group>"; };
+		B4E496531FA1B28A00583742 /* SHWebViewJSBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHWebViewJSBridge.m; sourceTree = "<group>"; };
+		B4E496541FA1B28A00583742 /* SHUIWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHUIWebView.h; sourceTree = "<group>"; };
+		B4E4965B1FA1B7B000583742 /* SHWeakProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHWeakProxy.m; sourceTree = "<group>"; };
+		B4E4965C1FA1B7B000583742 /* SHWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHWeakProxy.h; sourceTree = "<group>"; };
+		B4E4965E1FA1BA4000583742 /* SHWebViewHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SHWebViewHeader.h; sourceTree = "<group>"; };
+		B4E4965F1FA1BC0200583742 /* ExampleApp.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ExampleApp.html; sourceTree = "<group>"; };
+		B4E496611FA1DAF600583742 /* SHLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SHLoginViewController.h; sourceTree = "<group>"; };
+		B4E496621FA1DAF600583742 /* SHLoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SHLoginViewController.m; sourceTree = "<group>"; };
+		B4E496641FA1E11400583742 /* ReadMe.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ReadMe.md; sourceTree = "<group>"; };
+		B4E496671FA1F0E700583742 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		B4E4962D1FA198E500583742 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B4E496681FA1F10B00583742 /* WebKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		B4E496271FA198E500583742 = {
+			isa = PBXGroup;
+			children = (
+				B4E496641FA1E11400583742 /* ReadMe.md */,
+				B4E496321FA198E500583742 /* SohuH5-NativeInteraction */,
+				B4E496311FA198E500583742 /* Products */,
+				B4E496661FA1F0E700583742 /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		B4E496311FA198E500583742 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				B4E496301FA198E500583742 /* SohuH5-NativeInteraction.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		B4E496321FA198E500583742 /* SohuH5-NativeInteraction */ = {
+			isa = PBXGroup;
+			children = (
+				B4E496491FA1B15900583742 /* H5-NativeInteraction */,
+				B4E496331FA198E500583742 /* AppDelegate.h */,
+				B4E496341FA198E500583742 /* AppDelegate.m */,
+				B4E496361FA198E500583742 /* ViewController.h */,
+				B4E496371FA198E500583742 /* ViewController.m */,
+				B4E496611FA1DAF600583742 /* SHLoginViewController.h */,
+				B4E496621FA1DAF600583742 /* SHLoginViewController.m */,
+				B4E4965F1FA1BC0200583742 /* ExampleApp.html */,
+				B4E496391FA198E500583742 /* Main.storyboard */,
+				B4E4963C1FA198E500583742 /* Assets.xcassets */,
+				B4E4963E1FA198E500583742 /* LaunchScreen.storyboard */,
+				B4E496411FA198E500583742 /* Info.plist */,
+				B4E496421FA198E500583742 /* main.m */,
+			);
+			path = "SohuH5-NativeInteraction";
+			sourceTree = "<group>";
+		};
+		B4E496491FA1B15900583742 /* H5-NativeInteraction */ = {
+			isa = PBXGroup;
+			children = (
+				B4E4965E1FA1BA4000583742 /* SHWebViewHeader.h */,
+				B4E496541FA1B28A00583742 /* SHUIWebView.h */,
+				B4E496521FA1B28A00583742 /* SHUIWebView.m */,
+				B4E4964A1FA1B28A00583742 /* SHWebView.h */,
+				B4E4964B1FA1B28A00583742 /* SHWebView.m */,
+				B4E496511FA1B28A00583742 /* SHWebViewJSBridge.h */,
+				B4E496531FA1B28A00583742 /* SHWebViewJSBridge.m */,
+				B4E4964C1FA1B28A00583742 /* SHWKWebView.h */,
+				B4E496501FA1B28A00583742 /* SHWKWebView.m */,
+				B4E4965A1FA1B7A400583742 /* Util */,
+				B4E4964D1FA1B28A00583742 /* WebJS */,
+			);
+			path = "H5-NativeInteraction";
+			sourceTree = "<group>";
+		};
+		B4E4964D1FA1B28A00583742 /* WebJS */ = {
+			isa = PBXGroup;
+			children = (
+				B4E4964E1FA1B28A00583742 /* SHWebViewJS.h */,
+				B4E4964F1FA1B28A00583742 /* SHWebViewJS.m */,
+			);
+			path = WebJS;
+			sourceTree = "<group>";
+		};
+		B4E4965A1FA1B7A400583742 /* Util */ = {
+			isa = PBXGroup;
+			children = (
+				B4E4965C1FA1B7B000583742 /* SHWeakProxy.h */,
+				B4E4965B1FA1B7B000583742 /* SHWeakProxy.m */,
+			);
+			path = Util;
+			sourceTree = "<group>";
+		};
+		B4E496661FA1F0E700583742 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				B4E496671FA1F0E700583742 /* WebKit.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		B4E4962F1FA198E500583742 /* SohuH5-NativeInteraction */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = B4E496461FA198E500583742 /* Build configuration list for PBXNativeTarget "SohuH5-NativeInteraction" */;
+			buildPhases = (
+				B4E4962C1FA198E500583742 /* Sources */,
+				B4E4962D1FA198E500583742 /* Frameworks */,
+				B4E4962E1FA198E500583742 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "SohuH5-NativeInteraction";
+			productName = "SohuH5-NativeInteraction";
+			productReference = B4E496301FA198E500583742 /* SohuH5-NativeInteraction.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		B4E496281FA198E500583742 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = SH;
+				LastUpgradeCheck = 0900;
+				ORGANIZATIONNAME = "sohu-inc";
+				TargetAttributes = {
+					B4E4962F1FA198E500583742 = {
+						CreatedOnToolsVersion = 9.0.1;
+						ProvisioningStyle = Manual;
+					};
+				};
+			};
+			buildConfigurationList = B4E4962B1FA198E500583742 /* Build configuration list for PBXProject "SohuH5-NativeInteraction" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = B4E496271FA198E500583742;
+			productRefGroup = B4E496311FA198E500583742 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				B4E4962F1FA198E500583742 /* SohuH5-NativeInteraction */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		B4E4962E1FA198E500583742 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B4E496401FA198E500583742 /* LaunchScreen.storyboard in Resources */,
+				B4E4963D1FA198E500583742 /* Assets.xcassets in Resources */,
+				B4E4963B1FA198E500583742 /* Main.storyboard in Resources */,
+				B4E496601FA1BC0200583742 /* ExampleApp.html in Resources */,
+				B4E496651FA1E11400583742 /* ReadMe.md in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		B4E4962C1FA198E500583742 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				B4E496561FA1B28A00583742 /* SHWebViewJS.m in Sources */,
+				B4E496581FA1B28A00583742 /* SHUIWebView.m in Sources */,
+				B4E496381FA198E500583742 /* ViewController.m in Sources */,
+				B4E496571FA1B28A00583742 /* SHWKWebView.m in Sources */,
+				B4E4965D1FA1B7B000583742 /* SHWeakProxy.m in Sources */,
+				B4E496591FA1B28A00583742 /* SHWebViewJSBridge.m in Sources */,
+				B4E496431FA198E500583742 /* main.m in Sources */,
+				B4E496551FA1B28A00583742 /* SHWebView.m in Sources */,
+				B4E496351FA198E500583742 /* AppDelegate.m in Sources */,
+				B4E496631FA1DAF600583742 /* SHLoginViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		B4E496391FA198E500583742 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B4E4963A1FA198E500583742 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		B4E4963E1FA198E500583742 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				B4E4963F1FA198E500583742 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		B4E496441FA198E500583742 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		B4E496451FA198E500583742 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		B4E496471FA198E500583742 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "SohuH5-NativeInteraction/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sohu.SohuH5-NativeInteraction";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		B4E496481FA198E500583742 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				INFOPLIST_FILE = "SohuH5-NativeInteraction/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.sohu.SohuH5-NativeInteraction";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		B4E4962B1FA198E500583742 /* Build configuration list for PBXProject "SohuH5-NativeInteraction" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B4E496441FA198E500583742 /* Debug */,
+				B4E496451FA198E500583742 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		B4E496461FA198E500583742 /* Build configuration list for PBXNativeTarget "SohuH5-NativeInteraction" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				B4E496471FA198E500583742 /* Debug */,
+				B4E496481FA198E500583742 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = B4E496281FA198E500583742 /* Project object */;
+}
