@@ -25,18 +25,9 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     {
-        UILabel *info = [[UILabel alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height - 44, self.view.bounds.size.width, 44)];
-        info.numberOfLines = 0;
-        info.textColor = [UIColor whiteColor];
-        [self.view addSubview:info];
-        info.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
-        self.info = info;
-    }
-    
-    {
         CGRect rect = self.view.bounds;
         rect.origin.y = 64;
-        rect.size.height -= 64;
+        rect.size.height -= 64 + 44;
         SHWebView *webView = [[SHWebView alloc]initWithFrame:rect];
         webView.autoresizingMask = UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight;
         [self.view addSubview:webView];
@@ -48,6 +39,14 @@
         [webView loadURL:[self h5_url]];
     }
     
+    {
+        UILabel *info = [[UILabel alloc]initWithFrame:CGRectMake(0, self.view.bounds.size.height - 44, self.view.bounds.size.width, 44)];
+        info.numberOfLines = 0;
+        info.textColor = [UIColor whiteColor];
+        [self.view addSubview:info];
+        info.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
+        self.info = info;
+    }
 }
 
 - (NSURL *)h5_url
