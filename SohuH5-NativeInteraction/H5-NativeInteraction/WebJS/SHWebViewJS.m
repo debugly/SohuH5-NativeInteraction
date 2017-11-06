@@ -39,15 +39,22 @@ NSString *SHWebView_JS(void){
                 };
                 
                 jsBridge.doInvokeNative = function(type,message){
+                    //把消息和消息类型封装成结构
                     var m = {};
                     m['type'] = type;
                     m['message'] = message;
-                    var str = JSON.stringify(m);
                     
+                    //ios UIWebView and Android WebView
                     if(window.shNativeObject){
-                        eval('shNativeObject.'+'h5InvokeNative'+'(str)');
-                    }else if(window.webkit.messageHandlers.shNativeObject){
-                        eval('window.webkit.messageHandlers.shNativeObject.postMessage'+'(m)');
+                        ///ios 可以接收 json 对象，安卓不行，只能传 json 串了。
+                        var str = JSON.stringify(m);
+                        window.shNativeObject.h5InvokeNative(str);
+                        //eval('shNativeObject.'+'h5InvokeNative'+'(str)');
+                    }
+                    //ios WKWebView
+                    else if(window.webkit.messageHandlers.shNativeObject){
+                        window.webkit.messageHandlers.shNativeObject.postMessage(m);
+                        //eval('window.webkit.messageHandlers.shNativeObject.postMessage'+'(m)');
                     }else{
                         //alert
                     }

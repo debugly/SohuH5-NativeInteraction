@@ -89,7 +89,7 @@
             _strongSelf_SH
             [self.navigationController popViewControllerAnimated:YES];
             ///登录完毕之后，把uid更新给H5页面
-            [self.webView callHandler:@"updateInfo" data:@{@"uid":uid} responseCallback:^(NSDictionary *ps) {
+            [self.webView callH5Method:@"updateInfo" data:@{@"uid":uid} responseCallback:^(NSDictionary *ps) {
                 
                 _strongSelf_SH
                 

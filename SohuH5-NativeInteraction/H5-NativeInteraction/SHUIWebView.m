@@ -68,8 +68,18 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
 
 - (void)h5InvokeNative:(NSString *)data
 {
-    NSDictionary *body = [NSJSONSerialization JSONObjectWithData:[data dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-
+    NSDictionary *body = nil;
+    
+    if([data isKindOfClass:[NSString class]]){
+        body = [NSJSONSerialization JSONObjectWithData:[data dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+        NSAssert(body, @"无法解析通信通道数据:%@",data);
+    
+    }else if([data isKindOfClass:[NSDictionary class]]){
+        body = (NSDictionary *)data;
+    }else{
+        NSAssert(NO, @"通信通道数据不合法:%@",data);
+    }
+    
     dispatch_async(dispatch_get_main_queue(), ^{
         _weakSelf_SH
         [self.jsBridge handleH5Message:body callBack:^(NSDictionary *body) {
@@ -86,9 +96,9 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
     }
     NSData *data = [NSJSONSerialization dataWithJSONObject:body options:NSJSONWritingPrettyPrinted error:nil];
     NSString *psString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-
+    
     NSString *js = [NSString stringWithFormat:@"%@(%@)",@"window.shJSBridge.invokeH5Handler",psString];
-
+    
     [self.uiWebView stringByEvaluatingJavaScriptFromString:js];
 }
 
@@ -143,22 +153,22 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
     [self.jsBridge registerMethod:method handler:handler];
 }
 
-- (void)callHandler:(NSString *)handlerName data:(NSDictionary *)ps responseCallback:(SHWebResponeCallback)responseCallback
+- (void)callH5Method:(NSString *)method data:(NSDictionary *)ps responseCallback:(SHWebResponeCallback)responseCallback
 {
     if (!ps) {
         ps = @{};
     }
-
+    
     ///保存住该callBack；当H5回调时，调用这个callBack，实现回调
-    [self.jsBridge registerCallback:handlerName callBack:responseCallback];
-
-    NSDictionary *json = @{@"method":handlerName,@"data":ps};
-
+    [self.jsBridge registerCallback:method callBack:responseCallback];
+    
+    NSDictionary *json = @{@"method":method,@"data":ps};
+    
     NSData *data = [NSJSONSerialization dataWithJSONObject:json options:NSJSONWritingPrettyPrinted error:nil];
     NSString *psString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-
+    
     NSString *js = [NSString stringWithFormat:@"%@(%@)",@"window.shJSBridge.invokeH5Method",psString];
-
+    
     [self.uiWebView stringByEvaluatingJavaScriptFromString:js];
 }
 
@@ -171,3 +181,4 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
 }
 
 @end
+

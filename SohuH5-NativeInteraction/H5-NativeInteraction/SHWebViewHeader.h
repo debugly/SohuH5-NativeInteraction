@@ -39,11 +39,11 @@ typedef void(^SHWebNativeHandler)(NSDictionary *ps,SHWebResponeCallback callback
 /**
  调用 H5 的方法
  
- @param handlerName 方法名
+ @param method 方法名
  @param ps 参数
  @param responseCallback H5的回调
  */
-- (void)callHandler:(NSString*)handlerName data:(NSDictionary *)ps responseCallback:(SHWebResponeCallback)responseCallback;
+- (void)callH5Method:(NSString*)method data:(NSDictionary *)ps responseCallback:(SHWebResponeCallback)responseCallback;
 
 @end
 
