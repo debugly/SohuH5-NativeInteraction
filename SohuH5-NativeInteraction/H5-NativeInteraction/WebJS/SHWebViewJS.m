@@ -22,44 +22,55 @@ NSString *SHWebView_JS(void){
             createNew : function(){
                 
                 var jsBridge = {};
-                
-                jsBridge.messageHandlers = {};
+                ///存储 H5 注册的方法；
+                jsBridge.methodHandler = {};
+                ///存储 H5 方法的回调callback，即H5调用Native后，通过此callback收到响应
                 jsBridge.responseCallbacks = {};
                 
-                jsBridge.registerHandler = function(handlerName, handler) {
-                    this.messageHandlers[handlerName] = handler;
-                };
                 
-                jsBridge.doSend = function(message, responseCallback) {
-                    var method = message['method'];
-                    if (responseCallback) {
-                        this.responseCallbacks[method] = responseCallback;
-                    }
-                    this.doInvokeNative('Method',message);
+                //----------------------H5 register method--------------------//
+                
+                jsBridge.registerMethod = function(handlerName, handler) {
+                    this.methodHandler[handlerName] = handler;
                 };
+                ///之前叫这个名字；兼容老版本而已；
+                jsBridge.registerHandler = function(handlerName, handler) {
+                    this.methodHandler[handlerName] = handler;
+                };
+                //----------------------H5 invoke Native begin--------------------//
                 
                 jsBridge.doInvokeNative = function(type,message){
-                    //把消息和消息类型封装成结构
+                    
+                    // 把消息和消息类型封装成结构
                     var m = {};
                     m['type'] = type;
                     m['message'] = message;
                     
+                    ///ios 可以接收 json 对象，安卓不行，因此统一传 json 串。
+                    var str = JSON.stringify(m);
+                    
                     //ios UIWebView and Android WebView
                     if(window.shNativeObject){
-                        ///ios 可以接收 json 对象，安卓不行，只能传 json 串了。
-                        var str = JSON.stringify(m);
                         window.shNativeObject.h5InvokeNative(str);
-                        //eval('shNativeObject.'+'h5InvokeNative'+'(str)');
                     }
                     //ios WKWebView
                     else if(window.webkit.messageHandlers.shNativeObject){
-                        window.webkit.messageHandlers.shNativeObject.postMessage(m);
-                        //eval('window.webkit.messageHandlers.shNativeObject.postMessage'+'(m)');
+                        window.webkit.messageHandlers.shNativeObject.postMessage(str);
                     }else{
                         //alert
                     }
                 };
                 
+                jsBridge.doSend = function(message, responseCallback) {
+                    ///需要Native的回调,那么就把回调保存下
+                    if (responseCallback) {
+                        var method = message['method'];
+                        this.responseCallbacks[method] = responseCallback;
+                    }
+                    this.doInvokeNative('Method',message);
+                };
+                
+                ///支持可选参数
                 jsBridge.invokeNative = function(handlerName, data, responseCallback){
                     var args = arguments.length;
                     if(args == 1){
@@ -72,6 +83,32 @@ NSString *SHWebView_JS(void){
                         }
                     }else if(args == 3){
                         this.doSend({ method:handlerName, ps:data }, responseCallback);
+                    }
+                };
+                
+                ///H5 试探方法能否被调用
+                jsBridge.canInvokeNative = function(method,responseCallback){
+                    
+                    var m = {};
+                    m['method'] = method;
+                    m['ps'] = {};
+                    if (responseCallback) {
+                        this.responseCallbacks[method] = responseCallback;
+                        window.shJSBridge.doInvokeNative('invokeTest',m);
+                    }
+                };
+                
+                //----------------------H5 invoke Native end--------------------//
+                
+                //----------------------Native invoke H5 begin--------------------//
+                jsBridge.invokeH5 = function(m){
+                    var type = m['type'];
+                    var message = m['message'];
+                    
+                    if (type === 'method') {
+                        this.invokeH5Method(message);
+                    }else if(type === 'handler'){
+                        this.invokeH5Handler(message);
                     }
                 };
                 
@@ -88,31 +125,25 @@ NSString *SHWebView_JS(void){
                 
                 ///调用注册的H5方法
                 jsBridge.invokeH5Method = function(message){
-                    var handlerName = message['method'];
-                    var json = message['data'];
-                    var callback = window.shJSBridge.messageHandlers[handlerName];
                     
+                    var method = message['method'];
+                    
+                    ///寻找下H5有没有注册这个方法
+                    var callback = window.shJSBridge.methodHandler[method];
                     if(callback){
+                        
+                        var json = message['data'];
                         callback(json,function(data){
+                            ///H5给Native一个回调；
                             var m = {};
-                            m['method'] = handlerName;
+                            m['method'] = method;
                             m['ps'] = data ? data : {};
                             window.shJSBridge.doInvokeNative('Handler',m);
                         });
                     }
                 };
                 
-                ///H5 测试方法能否被调用
-                jsBridge.canInvokeNative = function(handlerName,responseCallback){
-                    
-                    var m = {};
-                    m['method'] = handlerName;
-                    m['ps'] = {};
-                    if (responseCallback) {
-                        this.responseCallbacks[handlerName] = responseCallback;
-                        window.shJSBridge.doInvokeNative('invokeTest',m);
-                    }
-                };
+                //----------------------Native invoke H5 end--------------------//
                 
                 return jsBridge;
             }

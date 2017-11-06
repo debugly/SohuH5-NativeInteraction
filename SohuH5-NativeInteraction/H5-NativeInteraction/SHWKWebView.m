@@ -112,28 +112,17 @@
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)h5message
 {
-    NSDictionary *body = [h5message body];
+    id body = [h5message body];
     _weakSelf_SH
-    [self.jsBridge handleH5Message:body callBack:^(NSDictionary *body) {
+    [self.jsBridge handleH5Message:body callBack:^(NSString *jsonText) {
         _strongSelf_SH
-        [self invokeH5Handler:body];
+        [self invokeH5:jsonText];
     }];
 }
 
-- (void)invokeH5Handler:(NSDictionary *)body
+- (void)invokeH5:(NSString *)jsonText
 {
-    if (!body) {
-        return;
-    }
-    [self executeH5Method:@"invokeH5Handler" ps:body];
-}
-
-- (void)executeH5Method:(NSString *)method ps:(NSDictionary *)ps
-{
-    NSData *data = [NSJSONSerialization dataWithJSONObject:ps options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *psString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-    
-    NSString *js = [NSString stringWithFormat:@"window.shJSBridge.%@(%@)",method,psString];
+    NSString *js = [NSString stringWithFormat:@"window.shJSBridge.invokeH5(%@)",jsonText];
     
     [self.wkWebView evaluateJavaScript:js completionHandler:^(id obj, NSError * error) {
         if(error){
@@ -152,9 +141,21 @@
     ///保存住该callBack；当H5回调时，调用这个callBack，实现回调
     [self.jsBridge registerCallback:method callBack:responseCallback];
     
-    NSDictionary *ps = @{@"method":method,@"data":data};
+    NSMutableDictionary *m = [NSMutableDictionary dictionary];
+    [m setValue:@"method" forKey:@"type"];
     
-    [self executeH5Method:@"invokeH5Method" ps:ps];
+    NSMutableDictionary *message = [NSMutableDictionary dictionary];
+    [message setObject:method forKey:@"method"];
+    
+    if (data) {
+        [message setObject:data forKey:@"data"];
+    }
+    [m setValue:message forKey:@"message"];
+    
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:m options:NSJSONWritingPrettyPrinted error:nil];
+    NSString *josnText = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    [self invokeH5:josnText];
 }
 
 - (SHWebViewJSBridge *)jsBridge

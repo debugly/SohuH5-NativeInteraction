@@ -17,6 +17,6 @@ typedef void(^SHWebNativeHandler)(NSDictionary *ps,SHWebResponeCallback callback
 
 - (void)registerCallback:(NSString *)name callBack:(SHWebResponeCallback)callback;
 
-- (void)handleH5Message:(NSDictionary *)body callBack:(void(^)(NSDictionary *body))callBackBlock;
+- (void)handleH5Message:(id)body callBack:(void(^)(NSString *jsonText))callBackBlock;
 
 @end

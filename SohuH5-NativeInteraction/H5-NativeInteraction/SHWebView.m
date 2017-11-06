@@ -56,9 +56,9 @@
     [self.webView registerMethod:method handler:handler];
 }
 
-- (void)callH5Method:(NSString *)handlerName data:(NSDictionary *)ps responseCallback:(SHWebResponeCallback)responseCallback
+- (void)callH5Method:(NSString *)method data:(NSDictionary *)data responseCallback:(SHWebResponeCallback)responseCallback
 {
-    [self.webView callH5Method:handlerName data:ps responseCallback:responseCallback];
+    [self.webView callH5Method:method data:data responseCallback:responseCallback];
 }
 
 @end

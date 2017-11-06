@@ -47,8 +47,20 @@
     }
 }
 
-- (void)handleH5Message:(NSDictionary *)body callBack:(void(^)(NSDictionary *body))callBackBlock
+- (void)handleH5Message:(id)data callBack:(void(^)(NSString *jsonText))callBackBlock
 {
+    NSDictionary *body = nil;
+    
+    if([data isKindOfClass:[NSString class]]){
+        body = [NSJSONSerialization JSONObjectWithData:[data dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
+        NSAssert(body, @"无法解析通信通道数据:%@",data);
+        
+    }else if([data isKindOfClass:[NSDictionary class]]){
+        body = (NSDictionary *)data;
+    }else{
+        NSAssert(NO, @"通信通道数据不合法:%@",data);
+    }
+    
     NSString *type = body[@"type"];
     NSDictionary *message = body[@"message"];
     NSString *method = message[@"method"];
@@ -59,8 +71,22 @@
         if (handler) {
             SHWebResponeCallback callBack = ^(NSDictionary *ps){
                 if (callBackBlock) {
-                    NSDictionary *json = @{@"method":method,@"data":ps};
-                    callBackBlock(json);
+                    
+                    NSMutableDictionary *m = [NSMutableDictionary dictionary];
+                    [m setValue:@"handler" forKey:@"type"];
+                    
+                    NSMutableDictionary *message = [NSMutableDictionary dictionary];
+                    [message setObject:method forKey:@"method"];
+                    
+                    if (ps) {
+                        [message setObject:ps forKey:@"data"];
+                    }
+                    [m setValue:message forKey:@"message"];
+                    
+                    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:m options:NSJSONWritingPrettyPrinted error:nil];
+                    NSString *josnText = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+                    
+                    callBackBlock(josnText);
                 }
             };
             handler(ps,callBack);
@@ -70,20 +96,27 @@
     else if([type isEqualToString:@"Handler"]){
         void (^handler)(NSDictionary *json) = self.callbacks[method];
         if (handler) {
-            if (ps.count == 0) {
-                handler(nil);
-            }else{
-                handler(ps);
-            }
+            handler(ps);
         }
     }else if ([type isEqualToString:@"invokeTest"]){
+        
+        NSMutableDictionary *m = [NSMutableDictionary dictionary];
+        [m setValue:@"handler" forKey:@"type"];
+        
+        NSMutableDictionary *message = [NSMutableDictionary dictionary];
+        [message setObject:method forKey:@"method"];
+        
         if ([[self.methodHandler allKeys]containsObject:method]) {
-            NSDictionary *json = @{@"method":method,@"data":@"1"};
-            callBackBlock(json);
+            [message setObject:@"1" forKey:@"data"];
         }else{
-            NSDictionary *json = @{@"method":method,@"data":@"0"};
-            callBackBlock(json);
+            [message setObject:@"0" forKey:@"data"];
         }
+        [m setValue:message forKey:@"message"];
+        
+        NSData *jsonData = [NSJSONSerialization dataWithJSONObject:m options:NSJSONWritingPrettyPrinted error:nil];
+        NSString *josnText = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+        
+        callBackBlock(josnText);
     }
 }
 

@@ -66,41 +66,36 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
     self.uiWebView = webview;
 }
 
-- (void)h5InvokeNative:(NSString *)data
+- (void)h5InvokeNative:(NSString *)body
 {
-    NSDictionary *body = nil;
-    
-    if([data isKindOfClass:[NSString class]]){
-        body = [NSJSONSerialization JSONObjectWithData:[data dataUsingEncoding:NSUTF8StringEncoding] options:NSJSONReadingMutableContainers error:nil];
-        NSAssert(body, @"无法解析通信通道数据:%@",data);
-    
-    }else if([data isKindOfClass:[NSDictionary class]]){
-        body = (NSDictionary *)data;
-    }else{
-        NSAssert(NO, @"通信通道数据不合法:%@",data);
-    }
-    
     dispatch_async(dispatch_get_main_queue(), ^{
         _weakSelf_SH
-        [self.jsBridge handleH5Message:body callBack:^(NSDictionary *body) {
+        [self.jsBridge handleH5Message:body callBack:^(NSString *jsonText) {
             _strongSelf_SH
-            [self invokeH5Handler:body];
+            [self invokeH5:jsonText];
         }];
     });
 }
 
-- (void)invokeH5Handler:(NSDictionary *)body
+- (void)invokeH5:(NSString *)jsonText
 {
-    if (!body) {
-        return;
-    }
-    NSData *data = [NSJSONSerialization dataWithJSONObject:body options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *psString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-    
-    NSString *js = [NSString stringWithFormat:@"%@(%@)",@"window.shJSBridge.invokeH5Handler",psString];
+    NSString *js = [NSString stringWithFormat:@"window.shJSBridge.invokeH5(%@)",jsonText];
     
     [self.uiWebView stringByEvaluatingJavaScriptFromString:js];
 }
+
+//- (void)invokeH5Handler:(NSDictionary *)body
+//{
+//    if (!body) {
+//        return;
+//    }
+//    NSData *data = [NSJSONSerialization dataWithJSONObject:body options:NSJSONWritingPrettyPrinted error:nil];
+//    NSString *psString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+//
+//    NSString *js = [NSString stringWithFormat:@"%@(%@)",@"window.shJSBridge.invokeH5Handler",psString];
+//
+//    [self.uiWebView stringByEvaluatingJavaScriptFromString:js];
+//}
 
 //屏蔽后端发起jsbridge://访问，避免提示错误
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
@@ -155,21 +150,24 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
 
 - (void)callH5Method:(NSString *)method data:(NSDictionary *)ps responseCallback:(SHWebResponeCallback)responseCallback
 {
-    if (!ps) {
-        ps = @{};
-    }
-    
     ///保存住该callBack；当H5回调时，调用这个callBack，实现回调
     [self.jsBridge registerCallback:method callBack:responseCallback];
     
-    NSDictionary *json = @{@"method":method,@"data":ps};
+    NSMutableDictionary *m = [NSMutableDictionary dictionary];
+    [m setValue:@"method" forKey:@"type"];
     
-    NSData *data = [NSJSONSerialization dataWithJSONObject:json options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *psString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
+    NSMutableDictionary *message = [NSMutableDictionary dictionary];
+    [message setObject:method forKey:@"method"];
     
-    NSString *js = [NSString stringWithFormat:@"%@(%@)",@"window.shJSBridge.invokeH5Method",psString];
+    if (ps) {
+        [message setObject:ps forKey:@"data"];
+    }
+    [m setValue:message forKey:@"message"];
     
-    [self.uiWebView stringByEvaluatingJavaScriptFromString:js];
+    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:m options:NSJSONWritingPrettyPrinted error:nil];
+    NSString *josnText = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
+    [self invokeH5:josnText];
 }
 
 - (SHWebViewJSBridge *)jsBridge

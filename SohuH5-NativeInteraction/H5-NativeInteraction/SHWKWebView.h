@@ -14,6 +14,8 @@
 API_AVAILABLE(ios(8.0))
 @interface SHWKWebView : UIView<SHWebViewProtocol>
 
+- (void)invokeH5:(NSString *)jsonText;
+
 @end
 
 #endif

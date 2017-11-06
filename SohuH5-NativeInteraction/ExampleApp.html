@@ -114,7 +114,7 @@
         ///注册方法，等着Native调用；
         setupSHJSBridge(function(bridge){
 
-            bridge.registerHandler('updateInfo',function(data, responseCallback) {
+            bridge.registerMethod('updateInfo',function(data, responseCallback) {
 
                                      printlog('收到Native发来的uid：' + data['uid']);
                                      var random = Math.floor(Math.random() * 1000);
