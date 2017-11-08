@@ -57,10 +57,30 @@
 
 #pragma mark - 刷新
 
+- (IBAction)callH5Method:(UIBarButtonItem *)sender
+{
+    int random = arc4random() % 1000;
+    NSString *uid = [NSString stringWithFormat:@"sohu-%d",random];
+    _weakSelf_SH
+    ///登录完毕之后，把uid更新给H5页面
+    [self.webView callH5Method:@"updateInfo" data:@{@"uid":uid} responseCallback:^(NSDictionary *ps) {
+        
+        _strongSelf_SH
+        //ps 则是H5收到Native调用之后回调回来的参数；
+        self.info.text = [NSString stringWithFormat:@"H5收到uid之后给了一个回执：%@",ps[@"text"]];
+        
+        UIColor *randomColor = [UIColor colorWithRed:arc4random() % 256/255.0 green:arc4random() % 256/255.0 blue:arc4random() % 256/255.0 alpha:1];
+        self.info.backgroundColor = randomColor;
+    }];
+}
+
+#pragma mark - 刷新页面
+
 - (IBAction)refresh:(UIBarButtonItem *)sender
 {
     self.info.text = nil;
     [self.webView loadURL:[self h5_url]];
+    self.info.backgroundColor = [UIColor clearColor];
 }
 
 #pragma mark -
@@ -72,7 +92,8 @@
     [self.webView registerMethod:@"showMsg" handler:^(NSDictionary *ps, SHWebResponeCallback callback) {
         _strongSelf_SH
         self.info.text = ps[@"text"];
-        self.info.backgroundColor = [UIColor blackColor];
+        UIColor *randomColor = [UIColor colorWithRed:arc4random() % 256/255.0 green:arc4random() % 256/255.0 blue:arc4random() % 256/255.0 alpha:1];
+        self.info.backgroundColor = randomColor;
         ///处理完消息后，给H5一个回调
         callback(@{@"status":@(200)});
     }];
@@ -86,18 +107,11 @@
         NSString *from = ps[@"from"];
         SHLoginViewController *loginVC = [[SHLoginViewController alloc]initWithFrom:from comletion:^(NSString *uid) {
             
+            ///登录完毕之后，把 uid 回调给H5！
+            callback(@{@"uid":uid});
+            
             _strongSelf_SH
             [self.navigationController popViewControllerAnimated:YES];
-            ///登录完毕之后，把uid更新给H5页面
-            [self.webView callH5Method:@"updateInfo" data:@{@"uid":uid} responseCallback:^(NSDictionary *ps) {
-                
-                _strongSelf_SH
-                
-                //ps 则是H5收到Native调用之后回调回来的参数；
-                self.info.text = [NSString stringWithFormat:@"H5收到登录,然后回执了信息：%@",ps[@"text"]];
-                self.info.backgroundColor = [UIColor orangeColor];
-                
-            }];
         }];
         
         [self.navigationController pushViewController:loginVC animated:YES];

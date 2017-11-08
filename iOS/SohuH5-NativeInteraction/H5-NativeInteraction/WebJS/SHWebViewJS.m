@@ -116,7 +116,7 @@ NSString *SHWebView_JS(void){
                 jsBridge.invokeH5Handler = function(message){
                     var handlerName = message['method'];
                     var json = message['data'];
-                    var callback = window.shJSBridge.responseCallbacks[handlerName];
+                    var callback = this.responseCallbacks[handlerName];
                     
                     if(callback){
                         callback(json);
@@ -129,7 +129,7 @@ NSString *SHWebView_JS(void){
                     var method = message['method'];
                     
                     ///寻找下H5有没有注册这个方法
-                    var callback = window.shJSBridge.methodHandler[method];
+                    var callback = this.methodHandler[method];
                     if(callback){
                         
                         var json = message['data'];
