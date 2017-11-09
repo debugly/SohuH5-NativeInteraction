@@ -1,8 +1,6 @@
-# 效果
+# iOS 端使用文档
 
-![](./H5-Native.gif)
-
-# iOS 端交互文档
+### 0、将 H5-NativeInteraction 文件夹添加到你的工程
 
 ### 1、调用 H5 提供的方法
 使用 SHWebView 对象调用 **callH5Method:
@@ -43,3 +41,7 @@ responseCallback:** 方法即可。```
 }];
     
 ```
+
+# 效果
+
+![](./H5-Native.gif)
