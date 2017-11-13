@@ -67,22 +67,22 @@ NSString *SHWebView_JS(void){
                         var method = message['method'];
                         this.responseCallbacks[method] = responseCallback;
                     }
-                    this.doInvokeNative('Method',message);
+                    this.doInvokeNative('method',message);
                 };
                 
                 ///支持可选参数
                 jsBridge.invokeNative = function(handlerName, data, responseCallback){
                     var args = arguments.length;
                     if(args == 1){
-                        this.doSend({ method:handlerName, ps:{} });
+                        this.doSend({ method:handlerName, data:{} });
                     }else if (args == 2) {
                         if(typeof data == 'function'){
-                            this.doSend({ method:handlerName, ps:{} },data);
+                            this.doSend({ method:handlerName, data:{} },data);
                         }else{
-                            this.doSend({ method:handlerName, ps:data });
+                            this.doSend({ method:handlerName, data:data });
                         }
                     }else if(args == 3){
-                        this.doSend({ method:handlerName, ps:data }, responseCallback);
+                        this.doSend({ method:handlerName, data:data }, responseCallback);
                     }
                 };
                 
@@ -91,7 +91,7 @@ NSString *SHWebView_JS(void){
                     
                     var m = {};
                     m['method'] = method;
-                    m['ps'] = {};
+                    m['data'] = {};
                     if (responseCallback) {
                         this.responseCallbacks[method] = responseCallback;
                         window.shJSBridge.doInvokeNative('invokeTest',m);
@@ -137,8 +137,8 @@ NSString *SHWebView_JS(void){
                             ///H5给Native一个回调；
                             var m = {};
                             m['method'] = method;
-                            m['ps'] = data ? data : {};
-                            window.shJSBridge.doInvokeNative('Handler',m);
+                            m['data'] = data ? data : {};
+                            window.shJSBridge.doInvokeNative('handler',m);
                         });
                     }
                 };

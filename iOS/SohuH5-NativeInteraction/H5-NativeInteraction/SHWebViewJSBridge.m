@@ -10,40 +10,40 @@
 
 @interface SHWebViewJSBridge ()
 
-@property (nonatomic, strong) NSMutableDictionary * methodHandler;
-@property (nonatomic, strong) NSMutableDictionary * callbacks;
+@property (nonatomic, strong) NSMutableDictionary * methodHandlerMap;
+@property (nonatomic, strong) NSMutableDictionary * callbackMap;
 
 @end
 
 @implementation SHWebViewJSBridge
 
-- (NSMutableDictionary *)methodHandler
+- (NSMutableDictionary *)methodHandlerMap
 {
-    if (!_methodHandler) {
-        _methodHandler = [NSMutableDictionary dictionary];
+    if (!_methodHandlerMap) {
+        _methodHandlerMap = [NSMutableDictionary dictionary];
     }
-    return _methodHandler;
+    return _methodHandlerMap;
 }
 
-- (NSMutableDictionary *)callbacks
+- (NSMutableDictionary *)callbackMap
 {
-    if (!_callbacks) {
-        _callbacks = [NSMutableDictionary dictionary];
+    if (!_callbackMap) {
+        _callbackMap = [NSMutableDictionary dictionary];
     }
-    return _callbacks;
+    return _callbackMap;
 }
 
 - (void)registerMethod:(NSString *)method handler:(SHWebNativeHandler)handler
 {
     if (method.length > 1 && handler) {
-        [self.methodHandler setObject:[handler copy] forKey:method];
+        [self.methodHandlerMap setObject:[handler copy] forKey:method];
     }
 }
 
-- (void)registerCallback:(NSString *)name callBack:(SHWebResponeCallback)callback
+- (void)registerCallback:(NSString *)name callBack:(SHWebResponseCallback)callback
 {
     if (name.length > 1 && callback) {
-        [self.callbacks setObject:[callback copy] forKey:name];
+        [self.callbackMap setObject:[callback copy] forKey:name];
     }
 }
 
@@ -64,12 +64,12 @@
     NSString *type = body[@"type"];
     NSDictionary *message = body[@"message"];
     NSString *method = message[@"method"];
-    NSDictionary *ps = message[@"ps"];
+    NSDictionary *ps = message[@"data"];
     
-    if([type isEqualToString:@"Method"]){
-        SHWebNativeHandler handler = self.methodHandler[method];
+    if([type isEqualToString:@"method"]){
+        SHWebNativeHandler handler = self.methodHandlerMap[method];
         if (handler) {
-            SHWebResponeCallback callBack = ^(NSDictionary *ps){
+            SHWebResponseCallback callBack = ^(NSDictionary *ps){
                 if (callBackBlock) {
                     
                     NSMutableDictionary *m = [NSMutableDictionary dictionary];
@@ -93,8 +93,8 @@
         }
     }
     ///Native调用了h5之后，h5回调Native的handle方法
-    else if([type isEqualToString:@"Handler"]){
-        void (^handler)(NSDictionary *json) = self.callbacks[method];
+    else if([type isEqualToString:@"handler"]){
+        void (^handler)(NSDictionary *json) = self.callbackMap[method];
         if (handler) {
             handler(ps);
         }
@@ -106,7 +106,7 @@
         NSMutableDictionary *message = [NSMutableDictionary dictionary];
         [message setObject:method forKey:@"method"];
         
-        if ([[self.methodHandler allKeys]containsObject:method]) {
+        if ([[self.methodHandlerMap allKeys]containsObject:method]) {
             [message setObject:@"1" forKey:@"data"];
         }else{
             [message setObject:@"0" forKey:@"data"];

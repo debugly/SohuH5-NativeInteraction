@@ -136,7 +136,7 @@
     [self.jsBridge registerMethod:method handler:handler];
 }
 
-- (void)callH5Method:(NSString *)method data:(NSDictionary *)data responseCallback:(SHWebResponeCallback)responseCallback
+- (void)callH5Method:(NSString *)method data:(NSDictionary *)data responseCallback:(SHWebResponseCallback)responseCallback
 {
     ///保存住该callBack；当H5回调时，调用这个callBack，实现回调
     [self.jsBridge registerCallback:method callBack:responseCallback];

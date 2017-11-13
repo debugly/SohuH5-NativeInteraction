@@ -8,14 +8,14 @@
 
 #import <Foundation/Foundation.h>
 
-typedef void(^SHWebResponeCallback)(NSDictionary *ps);
-typedef void(^SHWebNativeHandler)(NSDictionary *ps,SHWebResponeCallback callback);
+typedef void(^SHWebResponseCallback)(NSDictionary *ps);
+typedef void(^SHWebNativeHandler)(NSDictionary *ps,SHWebResponseCallback callback);
 
 @interface SHWebViewJSBridge : NSObject
 
 - (void)registerMethod:(NSString *)handlerName handler:(SHWebNativeHandler)handler;
 
-- (void)registerCallback:(NSString *)name callBack:(SHWebResponeCallback)callback;
+- (void)registerCallback:(NSString *)name callBack:(SHWebResponseCallback)callback;
 
 - (void)handleH5Message:(id)body callBack:(void(^)(NSString *jsonText))callBackBlock;
 

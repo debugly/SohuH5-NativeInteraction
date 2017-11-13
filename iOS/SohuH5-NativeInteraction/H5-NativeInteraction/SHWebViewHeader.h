@@ -20,8 +20,8 @@
 #endif
 
 
-typedef void(^SHWebResponeCallback)(NSDictionary *ps);
-typedef void(^SHWebNativeHandler)(NSDictionary *ps,SHWebResponeCallback callback);
+typedef void(^SHWebResponseCallback)(NSDictionary *ps);
+typedef void(^SHWebNativeHandler)(NSDictionary *ps,SHWebResponseCallback callback);
 
 @protocol SHWebViewProtocol <NSObject>
 
@@ -43,7 +43,7 @@ typedef void(^SHWebNativeHandler)(NSDictionary *ps,SHWebResponeCallback callback
  @param ps 参数
  @param responseCallback H5的回调
  */
-- (void)callH5Method:(NSString*)method data:(NSDictionary *)ps responseCallback:(SHWebResponeCallback)responseCallback;
+- (void)callH5Method:(NSString*)method data:(NSDictionary *)ps responseCallback:(SHWebResponseCallback)responseCallback;
 
 @end
 

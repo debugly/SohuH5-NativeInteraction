@@ -48,24 +48,6 @@
       <div class="footer">Sohu H5-Native Interaction Demo, by xuqianlong.</div>
 
     <script>
-
-(function(){
-  console.log("Hello,I'm an anonymous function!");
-  })();
-  
-  var outer = null;
-  (function(){
-       var one = 1;
-       function inner (){
-          one += 1;
-          alert(one);
-       }
-       outer = inner;
-   })();
-   outer(); //2
-   outer(); //3
-   outer(); //4
-   
         ///监听发生的错误，遇到错误打印出来
         window.onerror = function(err) {
             alert('window.onerror: ' + err)
