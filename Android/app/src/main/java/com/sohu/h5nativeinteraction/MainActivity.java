@@ -6,7 +6,6 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.sohu.h5nativeinteraction.library.SHWebView;
@@ -16,7 +15,12 @@ import org.json.JSONObject;
 
 public class MainActivity extends Activity {
 
+    private static final String TAG = "MainActivity";
+
     private SHWebView mWebView;
+
+    ///这个变量用于保存给H5发回执的对象，fuck了！Android上Activity间传值真是麻烦！可惜我设计的线性代码的回调机制！
+    private SHWebView.SHWebSendH5Response h5Response;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +36,7 @@ public class MainActivity extends Activity {
 
         mWebView.registerMethod("showMsg", new SHWebView.SHWebNativeHandler() {
             @Override
-            public void on(JSONObject ps, SHWebView.SHWebResponseCallback callback) {
+            public void on(JSONObject ps, SHWebView.SHWebSendH5Response h5Response) {
                 String text = ps.optString("text");
                 TextView tv = findViewById(R.id.textView);
                 tv.setText(text);
@@ -40,7 +44,7 @@ public class MainActivity extends Activity {
                 JSONObject json = new JSONObject();
                 try {
                     json.put("status", 200);
-                    callback.send(json);
+                    h5Response.send(json);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -49,9 +53,9 @@ public class MainActivity extends Activity {
 
         mWebView.registerMethod("openLoginPage", new SHWebView.SHWebNativeHandler() {
                     @Override
-                    public void on(JSONObject ps, SHWebView.SHWebResponseCallback callback) {
+                    public void on(JSONObject ps, SHWebView.SHWebSendH5Response response) {
                         String from = ps.optString("from");
-
+                        h5Response = response;
                         Intent intent = new Intent();
                         intent.putExtra("from", from);
                         intent.setClass(MainActivity.this, LoginActivity.class);
@@ -76,9 +80,9 @@ public class MainActivity extends Activity {
                     int random = (int)(Math.random() * 1000);
                     String uid = "sohu-" + random;
                     data.put("uid",uid);
-                    mWebView.callH5Method("updateInfo", data, new SHWebView.SHWebResponseCallback() {
+                    mWebView.callH5Method("updateInfo", data, new SHWebView.SHWebViewOnH5Response() {
                         @Override
-                        public void send(JSONObject ps) {
+                        public void on(JSONObject ps) {
                             String text = ps.optString("text");
                             TextView tv = findViewById(R.id.textView);
                             tv.setText("H5收到uid之后给了一个回执："+text);
@@ -99,13 +103,21 @@ public class MainActivity extends Activity {
         });
     }
 
-    private static final String TAG = "MainActivity";
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == 122 && resultCode == RESULT_OK) {
             String uid = data.getStringExtra("uid");
             Log.i(TAG, "onActivityResult: " + uid);
+
+            try{
+                JSONObject json = new JSONObject();
+                json.put("uid",uid);
+                h5Response.send(json);
+            }catch (Exception e){
+
+            }
+            h5Response = null;
         }
     }
 }

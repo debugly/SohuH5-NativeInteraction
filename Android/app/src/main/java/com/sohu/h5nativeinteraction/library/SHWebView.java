@@ -18,7 +18,7 @@ import java.util.HashMap;
 public class SHWebView extends WebView {
 
     private HashMap<String, SHWebNativeHandler> methodHandlerMap = new HashMap<>();
-    private HashMap<String, SHWebResponseCallback> callbackMap = new HashMap<>();
+    private HashMap<String, SHWebViewOnH5Response> callbackMap = new HashMap<>();
 
     public SHWebView(Context context) {
         super(context);
@@ -78,6 +78,12 @@ public class SHWebView extends WebView {
         });
     }
 
+    /*
+    * H5 调用 Native 的唯一出口，这个方法必须声明为 public 的！
+    * "method" ： H5 要调用 Native 的方法
+    * "handler" ：H5 发给 Native 的回执
+    * "invokeTest" ： 测试下 Native 是否支持了某个方法
+    * */
     @JavascriptInterface
     public void h5InvokeNative(String jsonString){
         if (null != jsonString && !jsonString.isEmpty()){
@@ -92,7 +98,7 @@ public class SHWebView extends WebView {
                     SHWebNativeHandler handler = methodHandlerMap.get(methodName);
                     if (null != handler){
 
-                        SHWebResponseCallback callBack = new SHWebResponseCallback() {
+                        SHWebSendH5Response callBack = new SHWebSendH5Response() {
                             @Override
                             public void send(JSONObject ps) {
 
@@ -118,10 +124,10 @@ public class SHWebView extends WebView {
                     }
                 } else if ("handler".equals(type)) {
 
-                    SHWebResponseCallback handler = callbackMap.get(methodName);
+                    SHWebViewOnH5Response handler = callbackMap.get(methodName);
 
                     if (null != handler){
-                        handler.send(ps);
+                        handler.on(ps);
                     }
                 } else if ("invokeTest".equals(type)) {
 
@@ -150,7 +156,7 @@ public class SHWebView extends WebView {
 
     /**
      * @param method H5调用的方法名
-     * @param handler 接收到H5的参数,在主线程回调
+     * @param handler 接收到H5的参数，还有给 H5发送回执的接口
      */
     public void registerMethod(String method,SHWebNativeHandler handler) {
         if ((method.length() > 0) && (null != handler)) {
@@ -158,9 +164,14 @@ public class SHWebView extends WebView {
         }
     }
 
-    public void callH5Method(String method,JSONObject data,SHWebResponseCallback responseCallback){
-        if ((method.length() > 0) && (null != responseCallback)){
-            this.callbackMap.put(method,responseCallback);
+    /**
+     * @param method H5调用的方法名
+     * @param data 传递给H5的参数
+     * @param response 给H5发送回执
+     */
+    public void callH5Method(String method,JSONObject data,SHWebViewOnH5Response response){
+        if ((method.length() > 0) && (null != response)){
+            this.callbackMap.put(method,response);
             try {
                 JSONObject result = new JSONObject();
 
@@ -178,12 +189,26 @@ public class SHWebView extends WebView {
         }
     }
 
-    public interface SHWebResponseCallback{
+    /*
+    * 通过该接口向 H5 发送回执
+    * */
+    public interface SHWebSendH5Response{
         void send(JSONObject ps);
     }
 
+    /*
+    * Native 注册方法的回调，当 H5 调用了 Native 之后，这个回调就会走；
+    * 可以使用 callback 发给 H5 一个回执
+    * */
     public interface SHWebNativeHandler{
-        void on(JSONObject ps,SHWebResponseCallback callback);
+        void on(JSONObject ps,SHWebSendH5Response callback);
+    }
+
+    /*
+    * Native调用H5之后，H5通过这个接口给个回执
+    * */
+    public interface SHWebViewOnH5Response{
+        void on(JSONObject ps);
     }
 
 }
