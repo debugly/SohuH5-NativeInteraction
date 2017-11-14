@@ -1,8 +1,8 @@
 //
-//  SHWebViewJS.m
+//  SHWebViewJSBridge+JS.m
 //  SohuH5-NativeInteraction
 //
-//  Created by 许乾隆 on 2017/10/26.
+//  Created by 许乾隆 on 2017/11/14.
 //  Copyright © 2017年 sohu-inc. All rights reserved.
 //
 
@@ -10,11 +10,13 @@
  H5 使用 SDK 在 window 上挂载 shJSBridge 对象调用Native的方法；
  shJSBridge 是 SHJSBridge 的 js '对象'， SHJSBridge 是对方法参数等交互细节的封装，最终会调用 SDK 注入的交互对象 shNativeObject ！
  */
+#import "SHWebViewJSBridge.h"
 
-#import "SHWebViewJS.h"
+@implementation SHWebViewJSBridge (js)
 
-NSString *SHWebView_JS(void){
-    #define __js_func__(x) #x
++ (NSString *)injectionJSForWebView
+{
+#define __js_func__(x) #x
     static NSString *js = @__js_func__(
                                        ;(function(){
         var SHJSBridge = {
@@ -27,16 +29,12 @@ NSString *SHWebView_JS(void){
                 ///存储 H5 方法的回调callback，即H5调用Native后，通过此callback收到响应
                 jsBridge.responseCallbacks = {};
                 
-                
                 //----------------------H5 register method--------------------//
                 
-                jsBridge.registerMethod = function(handlerName, handler) {
-                    this.methodHandler[handlerName] = handler;
+                jsBridge.registerMethod = function(method, handler) {
+                    this.methodHandler[method] = handler;
                 };
-                ///之前叫这个名字；兼容老版本而已；
-                jsBridge.registerHandler = function(handlerName, handler) {
-                    this.methodHandler[handlerName] = handler;
-                };
+                
                 //----------------------H5 invoke Native begin--------------------//
                 
                 jsBridge.doInvokeNative = function(type,message){
@@ -71,18 +69,18 @@ NSString *SHWebView_JS(void){
                 };
                 
                 ///支持可选参数
-                jsBridge.invokeNative = function(handlerName, data, responseCallback){
+                jsBridge.invokeNative = function(method, data, responseCallback){
                     var args = arguments.length;
                     if(args == 1){
-                        this.doSend({ method:handlerName, data:{} });
+                        this.doSend({ 'method':method, 'data':{} });
                     }else if (args == 2) {
                         if(typeof data == 'function'){
-                            this.doSend({ method:handlerName, data:{} },data);
+                            this.doSend({ 'method':method, 'data':{} },data);
                         }else{
-                            this.doSend({ method:handlerName, data:data });
+                            this.doSend({ 'method':method, 'data':data });
                         }
                     }else if(args == 3){
-                        this.doSend({ method:handlerName, data:data }, responseCallback);
+                        this.doSend({ 'method':method, 'data' :data }, responseCallback);
                     }
                 };
                 
@@ -163,8 +161,9 @@ NSString *SHWebView_JS(void){
             window.shJSBridge = SHJSBridge.createNew();
             setTimeout(_callQFJSCallbacks, 0);
         }
-})();
-    );
-    #undef __js_func__
+    })();
+                                       );
+#undef __js_func__
     return js;
 }
+@end

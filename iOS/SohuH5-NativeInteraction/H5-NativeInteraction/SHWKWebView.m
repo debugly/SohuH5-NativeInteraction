@@ -13,7 +13,6 @@
 #import <JavaScriptCore/JavaScriptCore.h>
 #import <WebKit/WebKit.h>
 #import "SHWebViewJSBridge.h"
-#import "SHWebViewJS.h"
 #import "SHWeakProxy.h"
 
 @interface SHWKWebView ()<WKNavigationDelegate,WKScriptMessageHandler>
@@ -85,7 +84,7 @@
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
 {
     ///注入js调用native的函数
-    NSString *js =  SHWebView_JS();
+    NSString *js = [SHWebViewJSBridge injectionJSForWebView];
     [self.wkWebView evaluateJavaScript:js completionHandler:^(id obj, NSError * error) {
         if(error){
             NSLog(@"注入失败");
@@ -116,7 +115,9 @@
     _weakSelf_SH
     [self.jsBridge handleH5Message:body callBack:^(NSString *jsonText) {
         _strongSelf_SH
-        [self invokeH5:jsonText];
+        if(jsonText.length > 0){
+            [self invokeH5:jsonText];
+        }
     }];
 }
 
@@ -136,26 +137,14 @@
     [self.jsBridge registerMethod:method handler:handler];
 }
 
-- (void)callH5Method:(NSString *)method data:(NSDictionary *)data responseCallback:(SHWebResponseCallback)responseCallback
+- (void)callH5Method:(NSString *)method data:(NSDictionary *)data responseCallback:(SHWebViewOnH5Response)responseCallback
 {
     ///保存住该callBack；当H5回调时，调用这个callBack，实现回调
-    [self.jsBridge registerCallback:method callBack:responseCallback];
-    
-    NSMutableDictionary *m = [NSMutableDictionary dictionary];
-    [m setValue:@"method" forKey:@"type"];
-    
-    NSMutableDictionary *message = [NSMutableDictionary dictionary];
-    [message setObject:method forKey:@"method"];
-    
-    if (data) {
-        [message setObject:data forKey:@"data"];
-    }
-    [m setValue:message forKey:@"message"];
-    
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:m options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *josnText = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
-    
-    [self invokeH5:josnText];
+    _weakSelf_SH
+    [self.jsBridge callH5Method:method data:data cookedJSStruct:^(NSString *jsText) {
+        _strongSelf_SH
+        [self invokeH5:jsText];
+    } callBack:responseCallback];
 }
 
 - (SHWebViewJSBridge *)jsBridge

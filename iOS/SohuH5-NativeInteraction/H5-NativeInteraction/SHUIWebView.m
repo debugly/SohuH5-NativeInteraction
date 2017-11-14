@@ -10,7 +10,6 @@
 
 #import "SHUIWebView.h"
 #import "SHWebViewJSBridge.h"
-#import "SHWebViewJS.h"
 #import "SHWeakProxy.h"
 
 @protocol SHUIWebViewJSExport <JSExport>
@@ -72,7 +71,9 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
         _weakSelf_SH
         [self.jsBridge handleH5Message:body callBack:^(NSString *jsonText) {
             _strongSelf_SH
-            [self invokeH5:jsonText];
+            if(jsonText.length > 0){
+                [self invokeH5:jsonText];
+            }
         }];
     });
 }
@@ -108,7 +109,7 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
     [self setupJSContext:webView];
     
     //注入js调用native的函数
-    NSString *js = SHWebView_JS();
+    NSString *js = [SHWebViewJSBridge injectionJSForWebView];
     [self.uiWebView stringByEvaluatingJavaScriptFromString:js];
 }
 
@@ -148,26 +149,13 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
     [self.jsBridge registerMethod:method handler:handler];
 }
 
-- (void)callH5Method:(NSString *)method data:(NSDictionary *)ps responseCallback:(SHWebResponseCallback)responseCallback
+- (void)callH5Method:(NSString *)method data:(NSDictionary *)data responseCallback:(SHWebViewOnH5Response)responseCallback
 {
-    ///保存住该callBack；当H5回调时，调用这个callBack，实现回调
-    [self.jsBridge registerCallback:method callBack:responseCallback];
-    
-    NSMutableDictionary *m = [NSMutableDictionary dictionary];
-    [m setValue:@"method" forKey:@"type"];
-    
-    NSMutableDictionary *message = [NSMutableDictionary dictionary];
-    [message setObject:method forKey:@"method"];
-    
-    if (ps) {
-        [message setObject:ps forKey:@"data"];
-    }
-    [m setValue:message forKey:@"message"];
-    
-    NSData *jsonData = [NSJSONSerialization dataWithJSONObject:m options:NSJSONWritingPrettyPrinted error:nil];
-    NSString *josnText = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
-    
-    [self invokeH5:josnText];
+    _weakSelf_SH
+    [self.jsBridge callH5Method:method data:data cookedJSStruct:^(NSString *jsText) {
+        _strongSelf_SH
+        [self invokeH5:jsText];
+    } callBack:responseCallback];
 }
 
 - (SHWebViewJSBridge *)jsBridge

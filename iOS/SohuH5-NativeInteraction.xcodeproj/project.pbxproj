@@ -14,7 +14,6 @@
 		B4E496401FA198E500583742 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B4E4963E1FA198E500583742 /* LaunchScreen.storyboard */; };
 		B4E496431FA198E500583742 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E496421FA198E500583742 /* main.m */; };
 		B4E496551FA1B28A00583742 /* SHWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E4964B1FA1B28A00583742 /* SHWebView.m */; };
-		B4E496561FA1B28A00583742 /* SHWebViewJS.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E4964F1FA1B28A00583742 /* SHWebViewJS.m */; };
 		B4E496571FA1B28A00583742 /* SHWKWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E496501FA1B28A00583742 /* SHWKWebView.m */; };
 		B4E496581FA1B28A00583742 /* SHUIWebView.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E496521FA1B28A00583742 /* SHUIWebView.m */; };
 		B4E496591FA1B28A00583742 /* SHWebViewJSBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E496531FA1B28A00583742 /* SHWebViewJSBridge.m */; };
@@ -23,6 +22,7 @@
 		B4E496631FA1DAF600583742 /* SHLoginViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B4E496621FA1DAF600583742 /* SHLoginViewController.m */; };
 		B4E496651FA1E11400583742 /* ReadMe.md in Resources */ = {isa = PBXBuildFile; fileRef = B4E496641FA1E11400583742 /* ReadMe.md */; };
 		B4E496681FA1F10B00583742 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4E496671FA1F0E700583742 /* WebKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		DDED43DF1FBA93970061C9D2 /* SHWebViewJSBridge+JS.m in Sources */ = {isa = PBXBuildFile; fileRef = DDED43DE1FBA93970061C9D2 /* SHWebViewJSBridge+JS.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,8 +39,6 @@
 		B4E4964A1FA1B28A00583742 /* SHWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHWebView.h; sourceTree = "<group>"; };
 		B4E4964B1FA1B28A00583742 /* SHWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHWebView.m; sourceTree = "<group>"; };
 		B4E4964C1FA1B28A00583742 /* SHWKWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHWKWebView.h; sourceTree = "<group>"; };
-		B4E4964E1FA1B28A00583742 /* SHWebViewJS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHWebViewJS.h; sourceTree = "<group>"; };
-		B4E4964F1FA1B28A00583742 /* SHWebViewJS.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHWebViewJS.m; sourceTree = "<group>"; };
 		B4E496501FA1B28A00583742 /* SHWKWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHWKWebView.m; sourceTree = "<group>"; };
 		B4E496511FA1B28A00583742 /* SHWebViewJSBridge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHWebViewJSBridge.h; sourceTree = "<group>"; };
 		B4E496521FA1B28A00583742 /* SHUIWebView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHUIWebView.m; sourceTree = "<group>"; };
@@ -54,6 +52,7 @@
 		B4E496621FA1DAF600583742 /* SHLoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SHLoginViewController.m; sourceTree = "<group>"; };
 		B4E496641FA1E11400583742 /* ReadMe.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ReadMe.md; sourceTree = "<group>"; };
 		B4E496671FA1F0E700583742 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		DDED43DE1FBA93970061C9D2 /* SHWebViewJSBridge+JS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SHWebViewJSBridge+JS.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -116,21 +115,12 @@
 				B4E4964B1FA1B28A00583742 /* SHWebView.m */,
 				B4E496511FA1B28A00583742 /* SHWebViewJSBridge.h */,
 				B4E496531FA1B28A00583742 /* SHWebViewJSBridge.m */,
+				DDED43DE1FBA93970061C9D2 /* SHWebViewJSBridge+JS.m */,
 				B4E4964C1FA1B28A00583742 /* SHWKWebView.h */,
 				B4E496501FA1B28A00583742 /* SHWKWebView.m */,
 				B4E4965A1FA1B7A400583742 /* Util */,
-				B4E4964D1FA1B28A00583742 /* WebJS */,
 			);
 			path = "H5-NativeInteraction";
-			sourceTree = "<group>";
-		};
-		B4E4964D1FA1B28A00583742 /* WebJS */ = {
-			isa = PBXGroup;
-			children = (
-				B4E4964E1FA1B28A00583742 /* SHWebViewJS.h */,
-				B4E4964F1FA1B28A00583742 /* SHWebViewJS.m */,
-			);
-			path = WebJS;
 			sourceTree = "<group>";
 		};
 		B4E4965A1FA1B7A400583742 /* Util */ = {
@@ -224,13 +214,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B4E496561FA1B28A00583742 /* SHWebViewJS.m in Sources */,
 				B4E496581FA1B28A00583742 /* SHUIWebView.m in Sources */,
 				B4E496381FA198E500583742 /* ViewController.m in Sources */,
 				B4E496571FA1B28A00583742 /* SHWKWebView.m in Sources */,
 				B4E4965D1FA1B7B000583742 /* SHWeakProxy.m in Sources */,
 				B4E496591FA1B28A00583742 /* SHWebViewJSBridge.m in Sources */,
 				B4E496431FA198E500583742 /* main.m in Sources */,
+				DDED43DF1FBA93970061C9D2 /* SHWebViewJSBridge+JS.m in Sources */,
 				B4E496551FA1B28A00583742 /* SHWebView.m in Sources */,
 				B4E496351FA198E500583742 /* AppDelegate.m in Sources */,
 				B4E496631FA1DAF600583742 /* SHLoginViewController.m in Sources */,

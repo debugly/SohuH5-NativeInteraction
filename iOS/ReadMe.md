@@ -10,10 +10,10 @@ responseCallback:** 方法即可。```
  调用 H5 的方法
  
  @param method 方法名
- @param ps 参数
+ @param data 参数
  @param responseCallback H5的回调
  */
-- (void)callH5Method:(NSString*)method data:(NSDictionary *)ps responseCallback:(SHWebResponseCallback)responseCallback;
+- (void)callH5Method:(NSString*)method data:(NSDictionary *)data responseCallback:(SHWebSendH5Response)responseCallback;
 ```
 ps : 如果 H5 没有注册名为 method 的处理，也不会导致崩溃!
 ### 2、支持 H5 调用 iOS跟 H5 支持 Native 调用是一个道理，iOS 需要注册下 H5 需要调用的方法！
@@ -32,7 +32,7 @@ responseCallback:** 方法即可。```
 
 ```objc
 ///注册了一个 showMsg 方法，H5 就可调用showMsg方法了，ps 是 H5 传过来参数
-[self.webView registerMethod:@"showMsg" handler:^(NSDictionary *ps, SHWebResponseCallback callback) {
+[self.webView registerMethod:@"showMsg" handler:^(NSDictionary *ps, SHWebSendH5Response callback) {
     _strongSelf_SH
     self.info.text = ps[@"text"];
     self.info.backgroundColor = [UIColor blackColor];

@@ -19,9 +19,20 @@
 #define _strongSelf_SH   __strong __typeof($weakself) self = $weakself;
 #endif
 
+/*
+ * 通过该接口向 H5 发送回执
+ * */
+typedef void(^SHWebViewOnH5Response)(NSDictionary *ps);
+/*
+ * Native调用H5之后，H5通过这个接口给个回执
+ * */
+typedef void(^SHWebSendH5Response)(NSDictionary *ps);
+/*
+ * Native 注册方法的回调，当 H5 调用了 Native 之后，这个回调就会走；
+ * 可以使用 callback 发给 H5 一个回执
+ * */
+typedef void(^SHWebNativeHandler)(NSDictionary *ps,SHWebSendH5Response callback);
 
-typedef void(^SHWebResponseCallback)(NSDictionary *ps);
-typedef void(^SHWebNativeHandler)(NSDictionary *ps,SHWebResponseCallback callback);
 
 @protocol SHWebViewProtocol <NSObject>
 
@@ -43,7 +54,7 @@ typedef void(^SHWebNativeHandler)(NSDictionary *ps,SHWebResponseCallback callbac
  @param ps 参数
  @param responseCallback H5的回调
  */
-- (void)callH5Method:(NSString*)method data:(NSDictionary *)ps responseCallback:(SHWebResponseCallback)responseCallback;
+- (void)callH5Method:(NSString*)method data:(NSDictionary *)ps responseCallback:(SHWebViewOnH5Response)responseCallback;
 
 @end
 

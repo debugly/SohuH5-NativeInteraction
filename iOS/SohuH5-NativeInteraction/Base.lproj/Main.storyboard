@@ -23,12 +23,12 @@
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     </view>
                     <navigationItem key="navigationItem" title="H5-Native" id="8ys-rf-eTk">
-                        <barButtonItem key="leftBarButtonItem" title="call H5" style="plain" id="BgE-P8-BXH">
+                        <barButtonItem key="leftBarButtonItem" title="call H5" style="done" id="BgE-P8-BXH">
                             <connections>
                                 <action selector="callH5Method:" destination="BYZ-38-t0r" id="vFU-U0-p2g"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="Y1t-kO-Ufy">
+                        <barButtonItem key="rightBarButtonItem" style="done" systemItem="refresh" id="Y1t-kO-Ufy">
                             <connections>
                                 <action selector="refresh:" destination="BYZ-38-t0r" id="syN-cc-1Jk"/>
                             </connections>
