@@ -64,6 +64,9 @@
         ///客户端还没注入交互JS的时候，本地先做个存储！
         function setupSHJSBridge(callback) {
             if (window.shJSBridge) {
+             var testjs = document.getElementById('log');
+            testjs.innerHTML += "</br>" + '直接获取bridge';
+
                 callback(window.shJSBridge);
             }else if (window.shJSCallbacks) {
                 window.shJSCallbacks.push(callback);
@@ -122,7 +125,7 @@
                                      responseCallback(responseData);
                                    });
                                });
-
+        canInvokeNative('aaa');
     </script>
 
 </body>

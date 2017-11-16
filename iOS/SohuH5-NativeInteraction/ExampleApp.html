@@ -122,7 +122,9 @@
                                      responseCallback(responseData);
                                    });
                                });
-
+                           
+                           ///测试下在页面还没加载完毕的时候就调用Native的方法
+                           canInvokeNative('aaa');
     </script>
 
 </body>

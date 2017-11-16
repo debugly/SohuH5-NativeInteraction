@@ -140,6 +140,7 @@
         ///向 window 上挂载 shJSBridge 对象
         if(!window.shJSBridge){
             window.shJSBridge = SHJSBridge.createNew();
-            setTimeout(_callQFJSCallbacks, 0);
+            //保守起见延迟100ms后执行，目的是让这个脚本执行完毕，Native端的方法结束
+            setTimeout(_callQFJSCallbacks, 100);
         }
     })();
