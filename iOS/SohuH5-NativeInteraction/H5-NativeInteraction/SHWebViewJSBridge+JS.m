@@ -92,7 +92,7 @@
                     m['data'] = {};
                     if (responseCallback) {
                         this.responseCallbacks[method] = responseCallback;
-                        window.shJSBridge.doInvokeNative('invokeTest',m);
+                        this.doInvokeNative('invokeTest',m);
                     }
                 };
                 
@@ -131,12 +131,13 @@
                     if(callback){
                         
                         var json = message['data'];
+                        _self = this;
                         callback(json,function(data){
                             ///H5给Native一个回调；
                             var m = {};
                             m['method'] = method;
                             m['data'] = data ? data : {};
-                            window.shJSBridge.doInvokeNative('handler',m);
+                            _self.doInvokeNative('handler',m);
                         });
                     }
                 };

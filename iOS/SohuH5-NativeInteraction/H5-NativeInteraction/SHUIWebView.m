@@ -85,19 +85,6 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
     [self.uiWebView stringByEvaluatingJavaScriptFromString:js];
 }
 
-//- (void)invokeH5Handler:(NSDictionary *)body
-//{
-//    if (!body) {
-//        return;
-//    }
-//    NSData *data = [NSJSONSerialization dataWithJSONObject:body options:NSJSONWritingPrettyPrinted error:nil];
-//    NSString *psString = [[NSString alloc]initWithData:data encoding:NSUTF8StringEncoding];
-//
-//    NSString *js = [NSString stringWithFormat:@"%@(%@)",@"window.shJSBridge.invokeH5Handler",psString];
-//
-//    [self.uiWebView stringByEvaluatingJavaScriptFromString:js];
-//}
-
 //屏蔽后端发起jsbridge://访问，避免提示错误
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
