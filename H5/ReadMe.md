@@ -32,32 +32,68 @@ window.shJSBridge.invokeNative("showMsg",function(json){                 var te
 ```
 ### 2、如何支持 Native 调用 H5 的方法
 使用 window.shJSBridge.registerMethod(method,handler) 注册 Native 将要调用的方法;- method : Native 将要调用的方法名- handler : Native 调用该方法后回调，回调 json 类型参数和回应 Native 的 callback	- data : Native 传给 H5 的参数	- responseCallback : 必要时可用该 callback 回调 Native		- responseData : 回调 Native 时带的参数，json 类型，【可选】```
-///由于 Native 是在页面加载完毕后才注入的，当注入完毕后，该方法的 callback 就会回调，然后 H5 可以使用 bridge 对象注册方法，或者调用 Native 的方法了；
-function setupshJSBridge(callback) {
-        if (window.shJSBridge) { return callback(shJSBridge); }
-        if (window.shJSCallbacks) { return window.shJSCallbacks.push(callback); }
-        window.shJSCallbacks = [callback];
-}
-    
-setupshJSBridge(function(bridge){
-        bridge.registerHandler('updateInfo',function(data, responseCallback) {
-                                            var random = Math.floor(Math.random() * 1000);
-                                            var testjs = document.getElementById('testjs');
-                                            testjs.innerHTML = data['text'] +':'+ random;
-                                            var responseData = { "text":random+''}
-                                            responseCallback(responseData)
-                                           });
-})
+window.shJSBridge.registerHandler('updateInfo',function(data, responseCallback) {
+    var random = Math.floor(Math.random() * 1000);
+    var testjs = document.getElementById('testjs');
+    testjs.innerHTML = data['text'] +':'+ random;
+    var responseData = { "text":random+''}
+    responseCallback(responseData)
+ });
+ 
 ```
 
-### 问题
+## 存在问题??
 
-H5 端为何要写个 setupshJSBridge 方法，从这个方法里拿到 bridge 对像，而不是直接使用 window.shJSBridge 对象呢？
+当页面没有加载完毕的时候，H5端就调用Native的方法会有问题吗？
 
-### 解答
+**会的！**
 
-如果你阅读了方案原理的话就会知道，交互脚本是移动端注入的，只有注入了脚本，才会在 window 上挂载 shJSBridge 这个对象！ 
 
-H5是零配置的，那么H5并无法知道移动端何时注入脚本，何时才能拿到 shJSBridge 对象，因此保险起见，H5端应当写一个 setupshJSBridge 的方法，通过这个方法 获取 shJSBridge 对象！
+如果你阅读过本方案原理的话就会知道，交互脚本是移动端注入的，H5是零配置的！只有注入了脚本，才会在 window 上挂载 shJSBridge 这个对象！所以页面没有加载完毕的时候，是获取不到 shJSBridge 对象的，这么写会出 bug 的！那问题是 H5 并不知道移动端何时注入脚本，何时才能拿到 shJSBridge 对象？怎么解决这个问题呢？
 
-原理是当移动端还没注入脚本的时候，就把回调先存起来，存在数组里，当移动端注入的时候，会检查这个数组里是否存在回调，若存在就进行回调，然后清空数组！因此，移动端不要改 **shJSCallbacks** 这个变量名，除非跟移动端一起都改！！
+
+## 解决方案
+
+H5 调用 Native 的时机是不确定的，保险起见，我们应当想办法让 H5 端总是能够拿到 shJSBridge 对象跟Native交互！因此需要 H5端写个类似 setupshJSBridge 的方法，H5 端总是通过这个方法的回调获取 shJSBridge 对象！
+
+```js
+
+function setupshJSBridge(callback) {
+
+    if (window.shJSBridge) {
+        ///Native已经挂载了，直接返回就行了
+        callback(window.shJSBridge);
+    }else if (window.shJSCallbacks) {
+        ///Native还没挂载，callback数组已经创建好了，先把回调存储起来
+        window.shJSCallbacks.push(callback);
+    }else{
+        ///Native还没挂载，callback数组还没创建，那么创建带存储
+        window.shJSCallbacks = [callback];
+    }
+}
+
+```
+
+> 这个逻辑跟移动端脚本配合使用的，移动端注入脚本后，会去判断shJSCallbacks是否存储了回调，如果存了就回调下，因此这就确保了 H5 端总是能够拿到 shJSBridge 对象！因此，H5 端不要改 **shJSCallbacks** 这个变量名，除非跟移动端一起都改！！
+
+所以上面的示例方法建议改成如下形式：
+
+
+```js
+///调用Native的showMsg方法
+setupSHJSBridge(function(bridge){
+    bridge.invokeNative("showMsg",function(json){                 var testjs = document.getElementById('testjs');                 testjs.innerHTML += json['text'];               });
+});
+```
+
+```js
+setupSHJSBridge(function(bridge){
+    bridge.registerHandler('updateInfo',function(data, responseCallback) {
+        var random = Math.floor(Math.random() * 1000);
+        var testjs = document.getElementById('testjs');
+        testjs.innerHTML = data['text'] +':'+ random;
+        var responseData = { "text":random+''}
+        responseCallback(responseData)
+     });
+});
+```
