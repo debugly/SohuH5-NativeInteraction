@@ -85,19 +85,29 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
     [self.uiWebView stringByEvaluatingJavaScriptFromString:js];
 }
 
+- (void)injectJSBridge
+{
+    [self setupJSContext:self.uiWebView];
+    //注入js调用native的函数
+    NSString *js = [SHWebViewJSBridge injectionJSForWebView];
+    [self.uiWebView stringByEvaluatingJavaScriptFromString:js];
+}
+
 //屏蔽后端发起jsbridge://访问，避免提示错误
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
-    return YES;
+    NSString *target = request.URL.absoluteString;
+    if (target && [@"sh://iamready" isEqualToString:target]) {
+        [self injectJSBridge];
+        return false;
+    }else{
+        return YES;
+    }
 }
 
 - (void)webViewDidFinishLoad:(UIWebView *)webView
 {
-    [self setupJSContext:webView];
-    
-    //注入js调用native的函数
-    NSString *js = [SHWebViewJSBridge injectionJSForWebView];
-    [self.uiWebView stringByEvaluatingJavaScriptFromString:js];
+    [self injectJSBridge];
 }
 
 - (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error

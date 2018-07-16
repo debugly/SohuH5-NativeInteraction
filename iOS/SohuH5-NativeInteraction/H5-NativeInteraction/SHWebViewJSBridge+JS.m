@@ -52,7 +52,7 @@
                         window.shNativeObject.h5InvokeNative(str);
                     }
                     //ios WKWebView
-                    else if(window.webkit.messageHandlers.shNativeObject){
+                    else if(window.webkit && window.webkit.messageHandlers){
                         window.webkit.messageHandlers.shNativeObject.postMessage(str);
                     }else{
                         //alert

@@ -1,62 +1,91 @@
 <!doctype html>
 <html>
-    <head>
-      <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-      <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
-      <style type='text/css'>
-          html { font-family:Helvetica; color:#222; margin: 0; }
-          body { margin: 0;}
-          .footer { color:steelblue; font-size: 0.8rem; line-height: 2rem; text-align: center; background-color: #000;}
-          .btn {  display: block;
-                  color: rgba(255, 255, 255, 0.7);
-                  background-color: rgba(255, 255, 255, 0.08);
-                  border-color: rgba(255, 255, 255, 0.2);
-                  border-style: solid;
-                  border-width: 1px;
-                  border-radius: 0.3rem;
-                  margin-top: 0.8rem;
-                  margin-bottom: 0.8rem;
-                  font-size: 1.2rem;
-          }
-          .logLine { margin-bottom:0.8rem; border-bottom:1px solid #ccc; border-top:1px solid #ccc; padding:4px 2px; font-family:courier; font-size:0.9rem; }
-          .content {
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <style type='text/css'>
+        html {
+            font-family: Helvetica;
+            color: #222;
+            margin: 0;
+        }
+
+        body {
+            margin: 0;
+        }
+
+        .footer {
+            color: steelblue;
+            font-size: 0.8rem;
+            line-height: 2rem;
+            text-align: center;
+            background-color: #000;
+        }
+
+        .btn {
+            display: block;
+            color: rgba(255, 255, 255, 0.7);
+            background-color: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.2);
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 0.3rem;
+            margin-top: 0.8rem;
+            margin-bottom: 0.8rem;
+            font-size: 1.2rem;
+        }
+
+        .logLine {
+            margin-bottom: 0.8rem;
+            border-bottom: 1px solid #ccc;
+            border-top: 1px solid #ccc;
+            padding: 4px 2px;
+            font-family: courier;
+            font-size: 0.9rem;
+        }
+
+        .content {
             background-image: linear-gradient(120deg, #BDB76B, #1E90FF);
             padding: 1.5rem;
-          }
-          .btns{
-            margin-bottom: 1.5rem;
-          }
-      </style>
-    </head>
-    <body>
+        }
 
-      <div class="content">
+        .btns {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+    <script src="https://debugly.cn/zone/libs/util3.js"></script>
+</head>
+
+<body>
+
+    <div class="content">
 
         <div class="btns">
-          <button class="btn" onclick="canInvokeNative('showMsg')">测试canInvokeNative？</button>
-          <button class="btn" onclick="callNativeShowMsg()">调用Native的showMsg方法</button>
-          <button class="btn" onclick="openLoginPage()">打开Native的登录页</button>
+            <button class="btn" onclick="canInvokeNative('showMsg')">测试canInvokeNative？</button>
+            <button class="btn" onclick="callNativeShowMsg()">调用Native的showMsg方法</button>
+            <button class="btn" onclick="openLoginPage()">打开Native的登录页</button>
         </div>
 
         <div class="logs">
-          <div class="logLine" id='errlog'>err log:</div>
-          <div class="logLine" id='log'>debug log:</div>
+            <div class="logLine" id='errlog'>err log:</div>
+            <div class="logLine" id='log'>debug log:</div>
         </div>
 
-      </div>
+    </div>
 
-      <div class="footer">Sohu H5-Native Interaction Demo, by xuqianlong.</div>
+    <div class="footer">Sohu H5-Native Interaction Demo, by xuqianlong.</div>
 
     <script>
         ///监听发生的错误，遇到错误打印出来
-        window.onerror = function(err) {
+        window.onerror = function (err) {
             alert('window.onerror: ' + err)
             var log = document.getElementById('errlog');
             log.innerHTML = err;
         }
 
         ///打印测试log
-        function printlog(msg){
+        function printlog(msg) {
             var testjs = document.getElementById('log');
             testjs.innerHTML += "</br>" + msg;
         }
@@ -65,67 +94,96 @@
         function setupSHJSBridge(callback) {
             if (window.shJSBridge) {
                 callback(window.shJSBridge);
-            }else if (window.shJSCallbacks) {
+            } else if (window.shJSCallbacks) {
                 window.shJSCallbacks.push(callback);
-            }else{
+            } else {
                 window.shJSCallbacks = [callback];
             }
         }
 
         ///调用Native的showMsg方法
-        function callNativeShowMsg(){
+        function callNativeShowMsg() {
             var method = "showMsg";
-            setupSHJSBridge(function(bridge){
-                            printlog("invoke【" + method + "】");
-                            var random = Math.floor(Math.random() * 1000);
-                            bridge.invokeNative(method,{"text":"H5给Native发消息了"+random},function(json){
-                                                printlog("after invoke【" + method + "】，recv callback msg:" + json["status"]);
-                                              });
-                                          });
+            setupSHJSBridge(function (bridge) {
+                printlog("invoke【" + method + "】");
+                var random = Math.floor(Math.random() * 1000);
+                bridge.invokeNative(method, { "text": "H5给Native发消息了" + random }, function (json) {
+                    printlog("after invoke【" + method + "】，recv callback msg:" + json["status"]);
+                });
+            });
         }
 
         ///测试H5能否调用Native的method方法
-        function canInvokeNative(method){
+        function canInvokeNative(method) {
 
-            setupSHJSBridge(function(bridge){
-                            printlog("canInvoke:" + method + "?");
-                            bridge.canInvokeNative(method,function(json){
-                                                       if(json === '1'){
-                                                           printlog('you can invode!');
-                                                       }else{
-                                                           printlog("you can't invode!");
-                                                       }
-                                                     });
-                                                  });
+            setupSHJSBridge(function (bridge) {
+                printlog("canInvoke:" + method + "?");
+                bridge.canInvokeNative(method, function (json) {
+                    if (json === '1') {
+                        printlog('you can invode!');
+                    } else {
+                        printlog("you can't invode!");
+                    }
+                });
+            });
         }
 
         ///打开Native的登录页面
-        function openLoginPage(){
+        function openLoginPage() {
 
-            setupSHJSBridge(function(bridge){
-                            var method = "openLoginPage";
-                            printlog("invoke【" + method + "】");
-                            bridge.invokeNative(method,{"from":"100"},function(json){
-                                                printlog("after invoke【" + method + "】，recv uid : " + json["uid"]);
-                                              });
-                                            });
+            setupSHJSBridge(function (bridge) {
+                var method = "openLoginPage";
+                printlog("invoke【" + method + "】");
+                bridge.invokeNative(method, { "from": "100" }, function (json) {
+                    printlog("after invoke【" + method + "】，recv uid : " + json["uid"]);
+                });
+            });
         }
 
         ///注册方法，等着Native调用；
-        setupSHJSBridge(function(bridge){
+        setupSHJSBridge(function (bridge) {
 
-            bridge.registerMethod('updateInfo',function(data, responseCallback) {
+            bridge.registerMethod('updateInfo', function (data, responseCallback) {
 
-                                     printlog('收到Native发来的uid：' + data['uid']);
-                                     var random = Math.floor(Math.random() * 1000);
-                                     var responseData = { "text":random+''};
-                                     responseCallback(responseData);
-                                   });
-                               });
-                           
-                           ///测试下在页面还没加载完毕的时候就调用Native的方法
-                           canInvokeNative('aaa');
+                printlog('收到Native发来的uid：' + data['uid']);
+                var random = Math.floor(Math.random() * 1000);
+                var responseData = { "text": random + '' };
+                responseCallback(responseData);
+            });
+        });
+        ///测试下在页面还没加载完毕的时候就调用Native的方法
+        canInvokeNative('aaa');
+
+        const documentOnReady = function (callback) {
+            ///兼容FF,Google
+            if (document.addEventListener) {
+                document.addEventListener('DOMContentLoaded', function () {
+                    document.removeEventListener('DOMContentLoaded', arguments.callee, false);
+                    callback();
+                }, false)
+            }
+            //兼容IE
+            else if (document.attachEvent) {
+                document.attachEvent('onreadystatechange', function () {
+                    if (document.readyState == "complete") {
+                        document.detachEvent("onreadystatechange", arguments.callee);
+                        callback();
+                    }
+                })
+            }
+            else if (document.lastChild == document.body) {
+                callback();
+            }
+        }
+
+<!--        documentOnReady(function () {-->
+<!--            window.location.href = "sh://iamready";-->
+<!--        });-->
+
     </script>
 
+    <script src="https://google.com/libs/util.js" async></script>
+
 </body>
+
 </html>

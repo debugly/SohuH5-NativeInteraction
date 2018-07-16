@@ -81,7 +81,7 @@
     [self.wkWebView loadRequest:requestObj];
 }
 
-- (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
+- (void)injectJSBridge
 {
     ///注入js调用native的函数
     NSString *js = [SHWebViewJSBridge injectionJSForWebView];
@@ -92,6 +92,11 @@
     }];
 }
 
+- (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
+{
+    [self injectJSBridge];
+}
+
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
 {
     //处理错误；
@@ -99,9 +104,16 @@
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    WKNavigationActionPolicy policy = WKNavigationActionPolicyAllow;
-    
-    decisionHandler(policy);
+    NSString *target = navigationAction.request.URL.absoluteString;
+    if (target && [@"sh://iamready" isEqualToString:target]) {
+        WKNavigationActionPolicy policy = WKNavigationActionPolicyCancel;
+        decisionHandler(policy);
+        [self injectJSBridge];
+    }else{
+        WKNavigationActionPolicy policy = WKNavigationActionPolicyAllow;
+        
+        decisionHandler(policy);
+    }
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
