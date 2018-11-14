@@ -70,6 +70,13 @@
     WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
     configuration.userContentController = userContentController;
     
+    //注入js脚本
+    NSString *js = [SHWebViewJSBridge injectionJSForWebView];
+    WKUserScript * injectScript = [[WKUserScript alloc] initWithSource:js
+                                                         injectionTime:WKUserScriptInjectionTimeAtDocumentStart
+                                                      forMainFrameOnly:NO];
+    [userContentController addUserScript:injectScript];
+    
     WKWebView *wkWebView = [[WKWebView alloc] initWithFrame:CGRectZero configuration:configuration];
     
     return wkWebView;
@@ -81,20 +88,9 @@
     [self.wkWebView loadRequest:requestObj];
 }
 
-- (void)injectJSBridge
-{
-    ///注入js调用native的函数
-    NSString *js = [SHWebViewJSBridge injectionJSForWebView];
-    [self.wkWebView evaluateJavaScript:js completionHandler:^(id obj, NSError * error) {
-        if(error){
-            NSLog(@"注入失败");
-        }
-    }];
-}
-
 - (void)webView:(WKWebView *)webView didFinishNavigation:(null_unspecified WKNavigation *)navigation
 {
-    [self injectJSBridge];
+
 }
 
 - (void)webView:(WKWebView *)webView didFailProvisionalNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error
@@ -104,21 +100,44 @@
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationAction:(WKNavigationAction *)navigationAction decisionHandler:(void (^)(WKNavigationActionPolicy))decisionHandler
 {
-    NSString *target = navigationAction.request.URL.absoluteString;
-    if (target && [@"sh://iamready" isEqualToString:target]) {
-        WKNavigationActionPolicy policy = WKNavigationActionPolicyCancel;
-        decisionHandler(policy);
-        [self injectJSBridge];
-    }else{
-        WKNavigationActionPolicy policy = WKNavigationActionPolicyAllow;
-        
-        decisionHandler(policy);
+    WKNavigationActionPolicy policy = WKNavigationActionPolicyAllow;
+    NSString *scheme = navigationAction.request.URL.scheme;
+    
+    if (navigationAction.navigationType == WKNavigationTypeLinkActivated) {
+        if(navigationAction.targetFrame){
+            policy = WKNavigationActionPolicyAllow;
+        }else{
+            //nil if this is a new window navigation
+            policy = WKNavigationActionPolicyCancel;
+            //target="_blank"浏览器上新开window；
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [webView loadRequest:navigationAction.request];
+            });
+        }
+    } else if ([scheme hasPrefix:@"http"]) {
+        policy = WKNavigationActionPolicyAllow;
+    } else if ([scheme hasPrefix:@"file"]) {
+        policy = WKNavigationActionPolicyAllow;
+    } else{
+        NSLog(@"PolicyCancel URL:%@",navigationAction.request.URL);
+        policy = WKNavigationActionPolicyCancel;
     }
+    decisionHandler(policy);
 }
 
 - (void)webView:(WKWebView *)webView decidePolicyForNavigationResponse:(WKNavigationResponse *)navigationResponse decisionHandler:(void (^)(WKNavigationResponsePolicy))decisionHandler
 {
     decisionHandler(WKNavigationResponsePolicyAllow);
+}
+
+- (void)webView:(WKWebView *)webView runJavaScriptAlertPanelWithMessage:(NSString *)message initiatedByFrame:(WKFrameInfo *)frame completionHandler:(void (^)(void))completionHandler
+{
+    NSLog(@"Alert:%@",message);
+    completionHandler();
+    //    NSAlert *alert = [[NSAlert alloc] init];
+    //    [alert setMessageText:message];
+    //    [alert addButtonWithTitle:@"知道了"];
+    //    [alert runModal];
 }
 
 - (void)userContentController:(WKUserContentController *)userContentController didReceiveScriptMessage:(WKScriptMessage *)h5message

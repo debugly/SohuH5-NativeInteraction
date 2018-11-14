@@ -150,6 +150,7 @@
 				B4E4962C1FA198E500583742 /* Sources */,
 				B4E4962D1FA198E500583742 /* Frameworks */,
 				B4E4962E1FA198E500583742 /* Resources */,
+				DDCD6490219BFD8700CCABD4 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -208,6 +209,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		DDCD6490219BFD8700CCABD4 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "buildNumber=$(/usr/libexec/PlistBuddy -c \"Print CFBundleVersion\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\")\nbuildNumber=$(($buildNumber + 1))\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $buildNumber\" \"${PROJECT_DIR}/${INFOPLIST_FILE}\"\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B4E4962C1FA198E500583742 /* Sources */ = {
@@ -365,8 +386,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.sohu.SohuH5-NativeInteraction";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "7b154ace-d434-44d3-b7e5-f338e5fdce14";
-				PROVISIONING_PROFILE_SPECIFIER = Any_Project_PP;
+				PROVISIONING_PROFILE_SPECIFIER = Any_Develop_PP;
 				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Debug;
 		};
@@ -384,6 +406,7 @@
 				PROVISIONING_PROFILE = "7b154ace-d434-44d3-b7e5-f338e5fdce14";
 				PROVISIONING_PROFILE_SPECIFIER = Any_Project_PP;
 				TARGETED_DEVICE_FAMILY = 1;
+				VALID_ARCHS = "arm64 armv7";
 			};
 			name = Release;
 		};
