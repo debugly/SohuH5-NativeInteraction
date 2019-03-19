@@ -58,11 +58,33 @@
 }
 
 /*
- H5 调用 Native 的唯一出口
- * "json" ： H5 发来的机构体
- * "method" ： H5 要调用 Native 的方法
- * "handler" ：H5 发给 Native 的回执
- * "invokeTest" ： 测试下 Native 是否支持了某个方法
+ {
+     message =     {
+         data = {};
+         method = aaa;
+     };
+     type = invokeTest;
+ }
+ 
+ {
+     message =     {
+         data = {
+            text = 438;
+         };
+         method = updateInfo;
+     };
+     type = handler;
+ }
+ 
+ {
+     message =     {
+         data = {
+            text = "H5\U7ed9Native\U53d1\U6d88\U606f\U4e86570";
+         };
+         method = showMsg;
+     };
+     type = method;
+ }
  */
 - (void)handleH5Message:(id)json callBack:(void(^)(NSString *jsText))callBackBlock
 {
@@ -83,6 +105,7 @@
     NSString *method = message[@"method"];
     NSDictionary *data = message[@"data"];
     
+    ///h5调用Native的method方法
     if([type isEqualToString:@"method"]){
         SHWebNativeHandler handler = self.methodHandlerMap[method];
         if (handler) {
@@ -101,7 +124,9 @@
         if (handler) {
             handler(data);
         }
-    }else if ([type isEqualToString:@"invokeTest"]){
+    }
+    ///测试下 Native 是否支持了某个方法
+    else if ([type isEqualToString:@"invokeTest"]){
         
         NSString *result = [[self.methodHandlerMap allKeys]containsObject:method] ? @"1" : @"0";
         NSString * josnText = [self makeResponseToH5Struct:method data:result];

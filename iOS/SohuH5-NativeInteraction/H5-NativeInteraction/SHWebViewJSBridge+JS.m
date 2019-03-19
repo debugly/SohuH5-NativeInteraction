@@ -12,13 +12,39 @@
  */
 #import "SHWebViewJSBridge.h"
 
+///定义H5需要使用的对象名字
+#define __h5BridgeName__ @"shJSBridge"
+///定义H5-Native通信时绑定的对象名字
+#define __h5NativeMapBridgeName__ @"shNativeObject"
+
 @implementation SHWebViewJSBridge (js)
 
-+ (NSString *)injectionJSForWebView
++ (NSString *)h5NativeMapBridgeName
+{
+    return __h5NativeMapBridgeName__ ;
+}
+
++ (NSString *)h5BridgeObjectName
+{
+    return __h5BridgeName__ ;
+}
+
++ (NSString *)jsBridgeReadyIdentity
+{
+    return [[__h5BridgeName__ stringByAppendingString:@"://iamready"] lowercaseString];
+}
+
++ (NSString *)makeInvokeH5Cmd:(NSString *)jsonText
+{
+    return [NSString stringWithFormat:@"window.%@.invokeH5(%@)",__h5BridgeName__, jsonText];
+}
+
+///以下为JS执行代码，在合适时机注入WebView中
++ (NSString *)javasctipt4Inject
 {
 #define __js_func__(x) #x
-    static NSString *js = @__js_func__(
-                                       ;(function(){
+    NSString *js = @__js_func__(
+                                ;(function(){
         var SHJSBridge = {
             
             createNew : function(){
@@ -29,10 +55,16 @@
                 ///存储 H5 方法的回调callback，即H5调用Native后，通过此callback收到响应
                 jsBridge.responseCallbacks = {};
                 
+                
                 //----------------------H5 register method--------------------//
                 
-                jsBridge.registerMethod = function(method, handler) {
-                    this.methodHandler[method] = handler;
+                jsBridge.registerMethod = function(handlerName, handler) {
+                    this.methodHandler[handlerName] = handler;
+                };
+                
+                ///之前叫这个名字；兼容老版本而已；
+                jsBridge.registerHandler = function(handlerName, handler) {
+                    this.methodHandler[handlerName] = handler;
                 };
                 
                 //----------------------H5 invoke Native begin--------------------//
@@ -48,12 +80,12 @@
                     var str = JSON.stringify(m);
                     
                     //ios UIWebView and Android WebView
-                    if(window.shNativeObject){
-                        window.shNativeObject.h5InvokeNative(str);
+                    if(window.__h5NativeMapBridgeName__){
+                        window.__h5NativeMapBridgeName__.h5InvokeNative(str);
                     }
-                    //ios WKWebView
-                    else if(window.webkit && window.webkit.messageHandlers){
-                        window.webkit.messageHandlers.shNativeObject.postMessage(str);
+                    //ios/macos WKWebView
+                    else if(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.__h5NativeMapBridgeName__){
+                        window.webkit.messageHandlers.__h5NativeMapBridgeName__.postMessage(str);
                     }else{
                         //alert
                     }
@@ -69,18 +101,18 @@
                 };
                 
                 ///支持可选参数
-                jsBridge.invokeNative = function(method, data, responseCallback){
+                jsBridge.invokeNative = function(handlerName, data, responseCallback){
                     var args = arguments.length;
                     if(args == 1){
-                        this.doSend({ 'method':method, 'data':{} });
+                        this.doSend({ method:handlerName, data:{} });
                     }else if (args == 2) {
                         if(typeof data == 'function'){
-                            this.doSend({ 'method':method, 'data':{} },data);
+                            this.doSend({ method:handlerName, data:{} },data);
                         }else{
-                            this.doSend({ 'method':method, 'data':data });
+                            this.doSend({ method:handlerName, data:data });
                         }
                     }else if(args == 3){
-                        this.doSend({ 'method':method, 'data' :data }, responseCallback);
+                        this.doSend({ method:handlerName, data:data }, responseCallback);
                     }
                 };
                 
@@ -92,7 +124,7 @@
                     m['data'] = {};
                     if (responseCallback) {
                         this.responseCallbacks[method] = responseCallback;
-                        this.doInvokeNative('invokeTest',m);
+                        window.__h5BridgeName__.doInvokeNative('invokeTest',m);
                     }
                 };
                 
@@ -114,7 +146,7 @@
                 jsBridge.invokeH5Handler = function(message){
                     var handlerName = message['method'];
                     var json = message['data'];
-                    var callback = this.responseCallbacks[handlerName];
+                    var callback = window.__h5BridgeName__.responseCallbacks[handlerName];
                     
                     if(callback){
                         callback(json);
@@ -127,17 +159,16 @@
                     var method = message['method'];
                     
                     ///寻找下H5有没有注册这个方法
-                    var callback = this.methodHandler[method];
+                    var callback = window.__h5BridgeName__.methodHandler[method];
                     if(callback){
                         
                         var json = message['data'];
-                        _self = this;
                         callback(json,function(data){
                             ///H5给Native一个回调；
                             var m = {};
                             m['method'] = method;
                             m['data'] = data ? data : {};
-                            _self.doInvokeNative('handler',m);
+                            window.__h5BridgeName__.doInvokeNative('handler',m);
                         });
                     }
                 };
@@ -148,24 +179,31 @@
             }
         };
         
-        function _callQFJSCallbacks() {
-            var callbacks = window.shJSCallbacks;
-            if(callbacks){
-                for (var i=0; i<callbacks.length; i++) {
-                    callbacks[i](window.shJSBridge);
+        function _handleLastH5Callers() {
+            var callers = window.__h5BridgeName__Callers;
+            if(callers){
+                for (var i = 0; i < callers.length; i++) {
+                    callers[i](window.__h5BridgeName__);
                 }
             }
-            delete window.shJSCallbacks;
+            delete window.__h5BridgeName__Callers;
         }
-        ///向 window 上挂载 shJSBridge 对象
-        if(!window.shJSBridge){
-            window.shJSBridge = SHJSBridge.createNew();
-            //保守起见延迟100ms后执行，目的是让这个脚本执行完毕，Native端的方法结束
-            setTimeout(_callQFJSCallbacks, 100);
+        
+        ///向 window 上挂载 __h5BridgeName__ 对象;并处理bridge准备好之前的H5调用
+        if(!window.__h5BridgeName__){
+            window.__h5BridgeName__ = SHJSBridge.createNew();
+            setTimeout(_handleLastH5Callers, 0);
         }
+        
     })();
-                                       );
+                                );
 #undef __js_func__
+    
+    js = [js stringByReplacingOccurrencesOfString:@"__h5BridgeName__" withString:[[self class]h5BridgeObjectName]];
+
+    js = [js stringByReplacingOccurrencesOfString:@"__h5NativeMapBridgeName__" withString:[[self class]h5NativeMapBridgeName]];
+
     return js;
 }
+
 @end

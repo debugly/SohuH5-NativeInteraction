@@ -94,10 +94,10 @@
         function setupSHJSBridge(callback) {
             if (window.shJSBridge) {
                 callback(window.shJSBridge);
-            } else if (window.shJSCallbacks) {
-                window.shJSCallbacks.push(callback);
+            } else if (window.shJSBridgeCallers) {
+                window.shJSBridgeCallers.push(callback);
             } else {
-                window.shJSCallbacks = [callback];
+                window.shJSBridgeCallers = [callback];
             }
         }
 
@@ -177,7 +177,7 @@
         }
 
         documentOnReady(function () {
-            window.location.href = "sh://iamready";
+            window.location.href = "shJSBridge://iamready";
         });
 
     </script>

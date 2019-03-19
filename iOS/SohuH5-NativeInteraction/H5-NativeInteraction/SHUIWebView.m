@@ -80,7 +80,7 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
 
 - (void)invokeH5:(NSString *)jsonText
 {
-    NSString *js = [NSString stringWithFormat:@"window.shJSBridge.invokeH5(%@)",jsonText];
+    NSString *js = [SHWebViewJSBridge makeInvokeH5Cmd:jsonText];
     
     [self.uiWebView stringByEvaluatingJavaScriptFromString:js];
 }
@@ -89,7 +89,7 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
 {
     [self setupJSContext:self.uiWebView];
     //注入js调用native的函数
-    NSString *js = [SHWebViewJSBridge injectionJSForWebView];
+    NSString *js = [SHWebViewJSBridge javasctipt4Inject];
     [self.uiWebView stringByEvaluatingJavaScriptFromString:js];
 }
 
@@ -97,7 +97,8 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
 - (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
 {
     NSString *target = request.URL.absoluteString;
-    if (target && [@"sh://iamready" isEqualToString:target]) {
+    NSString *identity = [SHWebViewJSBridge jsBridgeReadyIdentity];
+    if (target && [identity isEqualToString:target]) {
         [self injectJSBridge];
         return false;
     }else{
@@ -127,7 +128,9 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
     
     /// 以 JSExport 协议关联shNativeObject的方法
     SHWeakProxy *proxy = [SHWeakProxy weakProxyWithTarget:self];
-    self.context[@"shNativeObject"] = proxy;
+    NSString *nativeName = [SHWebViewJSBridge h5NativeMapBridgeName];
+    NSAssert(nativeName, @"SHWebViewJSBridge h5NativeMapBridgeName can't be nil");
+    self.context[nativeName] = proxy;
 }
 
 - (void)loadRequest:(NSURLRequest *)request

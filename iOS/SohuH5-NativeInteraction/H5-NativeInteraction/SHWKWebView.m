@@ -65,13 +65,16 @@
     
     //增加messageHandler对象
     SHWeakProxy *proxy = [SHWeakProxy weakProxyWithTarget:self];
-    [userContentController addScriptMessageHandler:(id <WKScriptMessageHandler>)proxy name:@"shNativeObject"];
+    NSString *nativeName = [SHWebViewJSBridge h5NativeMapBridgeName];
+    NSAssert(nativeName, @"SHWebViewJSBridge h5NativeMapBridgeName can't be nil");
+    [userContentController addScriptMessageHandler:(id <WKScriptMessageHandler>)proxy
+                                              name:nativeName];
     
     WKWebViewConfiguration *configuration = [WKWebViewConfiguration new];
     configuration.userContentController = userContentController;
     
     //注入js脚本
-    NSString *js = [SHWebViewJSBridge injectionJSForWebView];
+    NSString *js = [SHWebViewJSBridge javasctipt4Inject];
     WKUserScript * injectScript = [[WKUserScript alloc] initWithSource:js
                                                          injectionTime:WKUserScriptInjectionTimeAtDocumentStart
                                                       forMainFrameOnly:NO];
@@ -154,7 +157,7 @@
 
 - (void)invokeH5:(NSString *)jsonText
 {
-    NSString *js = [NSString stringWithFormat:@"window.shJSBridge.invokeH5(%@)",jsonText];
+    NSString *js = [SHWebViewJSBridge makeInvokeH5Cmd:jsonText];
     
     [self.wkWebView evaluateJavaScript:js completionHandler:^(id obj, NSError * error) {
         if(error){

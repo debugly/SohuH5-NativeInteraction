@@ -36,7 +36,7 @@
 /**
  统一处理消息通道发来的消息
 
- @param body 消息结构体
+ @param body H5发来的消息结构体
  @param callBackBlock 内部需要给H5回执时，就会回调给上层，然后上层执行jsText即可
  */
 - (void)handleH5Message:(id)body callBack:(void(^)(NSString *jsText))callBackBlock;
@@ -46,10 +46,42 @@
 @interface SHWebViewJSBridge(js)
 
 /**
- 获取 webview 需要注入的js脚本
- 
- @return js 脚本
+ 实现了交互通信的js脚本，需要在恰当的时机注入到 webview！
+ @return JavaScript string
  */
-+ (NSString *)injectionJSForWebView;
++ (NSString *)javasctipt4Inject;
+
+
+/**
+ 跟H5交互的对像名，需要做个映射！
+
+ @return a string name
+ */
++ (NSString *)h5NativeMapBridgeName;
+
+
+/**
+ H5 端需要使用的对象名
+ such as: window.shJSBridge
+ @return a h5 bridge name
+ */
++ (NSString *)h5BridgeObjectName;
+
+
+/**
+ 只有 UIWebView 才会用到，是一个优化机制！
+
+ @return a ready identity string
+ */
++ (NSString *)jsBridgeReadyIdentity;
+
+
+/**
+ 构造用于调用H5的消息命令
+
+ @param jsonText h5消息结构体
+ @return JavaScript cmd
+ */
++ (NSString *)makeInvokeH5Cmd:(NSString *)jsonText;
 
 @end
