@@ -7,31 +7,26 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "SHWebViewHeader.h"
+#import "SHWebViewJSBridgeHeader.h"
 
 @interface SHWebViewJSBridge : NSObject
 
-
 /**
- 注册方法，供H5调用
-
- @param method 方法名
- @param handler 当H5调用这个方法时，在主线程回调
-                可以通过 callback 给H5一个回执
+ 注册方法，等待H5端调用
+ 
+ @param method H5调用的方法名
+ @param handler 接收到H5的参数,在主线程回调
  */
 - (void)registerMethod:(NSString *)method handler:(SHWebNativeHandler)handler;
-
 
 /**
  调用 H5 的方法
 
  @param method 方法名
- @param data 传给H5的参数
- @param cookie 内部处理了通信协议，把包装好的结构回调给上层，上层执行jsText即可
- @param callback 当H5发给Native回执时回调
+ @param data 参数
+ @return 构造好的完整的js语句，接下来可交给 webview 控件发送出去！
  */
-- (void)callH5Method:(NSString *)method data:(NSDictionary *)data cookedJSStruct:(void(^)(NSString *jsText))cookie callBack:(SHWebViewOnH5Response)callback;
-
+- (NSString *)makeInvokeH5Cmd:(NSString *)method data:(NSDictionary *)data callBack:(SHWebViewOnH5Response)callback;
 
 /**
  统一处理消息通道发来的消息
@@ -39,7 +34,7 @@
  @param body H5发来的消息结构体
  @param callBackBlock 内部需要给H5回执时，就会回调给上层，然后上层执行jsText即可
  */
-- (void)handleH5Message:(id)body callBack:(void(^)(NSString *jsText))callBackBlock;
+- (void)handleH5Message:(id)body callBack:(void(^)(NSString *cmd))callBackBlock;
 
 @end
 

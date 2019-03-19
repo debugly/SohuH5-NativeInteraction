@@ -42,18 +42,35 @@
 
 - (void)registerCallback:(NSString *)name callBack:(SHWebViewOnH5Response)callback
 {
-    if (name.length > 1 && callback) {
-        [self.callbackMap setObject:[callback copy] forKey:name];
+    if (name.length > 1) {
+        if (callback) {
+            [self.callbackMap setObject:[callback copy] forKey:name];
+        } else {
+            [self.callbackMap removeObjectForKey:name];
+        }
     }
 }
 
-- (void)callH5Method:(NSString *)method data:(NSDictionary *)data cookedJSStruct:(void (^)(NSString *))cookie callBack:(SHWebViewOnH5Response)callback
+- (NSString *)makeInvokeH5Cmd:(NSString *)method data:(NSDictionary *)data callBack:(SHWebViewOnH5Response)callback
 {
-    if (cookie) {
-        [self registerCallback:method callBack:callback];
-        
-        NSString *js = [self makeCallH5Struct:method data:data];
-        cookie(js);
+    [self registerCallback:method callBack:callback];
+    NSString *cmd = [self packageCmd:SHWebViewJSBridgeMessageTypeMethod method:method data:data];
+    return cmd;
+}
+
+- (void)invokeNativeMethod:(NSString *)method parameter:(NSDictionary *)ps callBack:(void(^)(NSString *jsonText))callBackBlock
+{
+    SHWebNativeHandler handler = self.methodHandlerMap[method];
+    if (handler) {
+        SHWebSendH5Response callBack = ^(NSDictionary *data){
+            if (callBackBlock) {
+                NSString *jsonText = [self packageCmd:SHWebViewJSBridgeMessageTypeHandler
+                                               method:method
+                                                 data:data];
+                callBackBlock(jsonText);
+            }
+        };
+        handler(ps,callBack);
     }
 }
 
@@ -86,7 +103,7 @@
      type = method;
  }
  */
-- (void)handleH5Message:(id)json callBack:(void(^)(NSString *jsText))callBackBlock
+- (void)handleH5Message:(id)json callBack:(void(^)(NSString *cmd))callBackBlock
 {
     NSDictionary *body = nil;
     
@@ -107,16 +124,7 @@
     
     ///h5调用Native的method方法
     if([type isEqualToString:@"method"]){
-        SHWebNativeHandler handler = self.methodHandlerMap[method];
-        if (handler) {
-            SHWebSendH5Response callBack = ^(NSDictionary *ps){
-                if (callBackBlock) {
-                    NSString * josnText = [self makeResponseToH5Struct:method data:ps];
-                    callBackBlock(josnText);
-                }
-            };
-            handler(data,callBack);
-        }
+        [self invokeNativeMethod:method parameter:data callBack:callBackBlock];
     }
     ///Native调用了h5之后，h5回调Native的handle方法
     else if([type isEqualToString:@"handler"]){
@@ -128,33 +136,35 @@
     ///测试下 Native 是否支持了某个方法
     else if ([type isEqualToString:@"invokeTest"]){
         
-        NSString *result = [[self.methodHandlerMap allKeys]containsObject:method] ? @"1" : @"0";
-        NSString * josnText = [self makeResponseToH5Struct:method data:result];
+        NSString *data = [[self.methodHandlerMap allKeys]containsObject:method] ? @"1" : @"0";
         
-        callBackBlock(josnText);
+        NSString *cmd = [self packageCmd:SHWebViewJSBridgeMessageTypeHandler
+                                           method:method
+                                             data:data];
+        callBackBlock(cmd);
     }
 }
 
 #pragma mark - 构造发送给H5的结构体
-
-- (NSString *)makeCallH5Struct:(NSString *)method data:(id)data
-{
-    return [self makeInteractionStruct:@"method" method:method data:data];
-}
-
-- (NSString *)makeResponseToH5Struct:(NSString *)method data:(id)data
-{
-    return [self makeInteractionStruct:@"handler" method:method data:data];
-}
-
-- (NSString *)makeInteractionStruct:(NSString *)type method:(NSString *)method data:(id)data
+////协议相关
+- (NSString *)_packageMessage:(SHWebViewJSBridgeMessageType) messageType method:(NSString *)method data:(id)data
 {
     NSMutableDictionary *m = [NSMutableDictionary dictionary];
-    [m setValue:type forKey:@"type"];
     
+    ///1，确定类型
+    NSString *messageTypeStr = @"";
+    if(messageType == SHWebViewJSBridgeMessageTypeMethod){
+        messageTypeStr = @"method";
+    }else if(messageType == SHWebViewJSBridgeMessageTypeHandler){
+        messageTypeStr = @"handler";
+    }
+    [m setValue:messageTypeStr forKey:@"type"];
+    
+    ///2,确定方法名
     NSMutableDictionary *message = [NSMutableDictionary dictionary];
     [message setObject:method forKey:@"method"];
     
+    ///3,确定参数
     if (data) {
         [message setObject:data forKey:@"data"];
     }
@@ -162,7 +172,14 @@
     
     NSData *jsonData = [NSJSONSerialization dataWithJSONObject:m options:NSJSONWritingPrettyPrinted error:nil];
     NSString *josnText = [[NSString alloc]initWithData:jsonData encoding:NSUTF8StringEncoding];
+    
     return josnText;
+}
+
+- (NSString *)packageCmd:(SHWebViewJSBridgeMessageType) messageType method:(NSString *)method data:(id)data
+{
+    NSString *msg = [self _packageMessage:messageType method:method data:data];
+    return [[self class] makeInvokeH5Cmd:msg];
 }
 
 @end

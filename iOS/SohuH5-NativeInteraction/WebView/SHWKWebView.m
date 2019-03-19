@@ -8,6 +8,14 @@
 
 #import "SHWKWebView.h"
 
+#ifndef _weakSelf_SH
+#define _weakSelf_SH     __weak   __typeof(self) $weakself = self;
+#endif
+
+#ifndef _strongSelf_SH
+#define _strongSelf_SH   __strong __typeof($weakself) self = $weakself;
+#endif
+
 #if (__IPHONE_OS_VERSION_MAX_ALLOWED >= 80000)
 
 #import <JavaScriptCore/JavaScriptCore.h>
@@ -147,21 +155,14 @@
 {
     id body = [h5message body];
     _weakSelf_SH
-    [self.jsBridge handleH5Message:body callBack:^(NSString *jsonText) {
+    [self.jsBridge handleH5Message:body callBack:^(NSString *jsCmd) {
         _strongSelf_SH
-        if(jsonText.length > 0){
-            [self invokeH5:jsonText];
-        }
-    }];
-}
-
-- (void)invokeH5:(NSString *)jsonText
-{
-    NSString *js = [SHWebViewJSBridge makeInvokeH5Cmd:jsonText];
-    
-    [self.wkWebView evaluateJavaScript:js completionHandler:^(id obj, NSError * error) {
-        if(error){
-            
+        if(jsCmd.length > 0){
+            [self.wkWebView evaluateJavaScript:jsCmd completionHandler:^(id obj, NSError * error) {
+                if(error){
+                    
+                }
+            }];
         }
     }];
 }
@@ -171,14 +172,15 @@
     [self.jsBridge registerMethod:method handler:handler];
 }
 
-- (void)callH5Method:(NSString *)method data:(NSDictionary *)data responseCallback:(SHWebViewOnH5Response)responseCallback
+- (void)invokeH5:(NSString *)method data:(NSDictionary *)data responseCallback:(SHWebViewOnH5Response)responseCallback
 {
     ///保存住该callBack；当H5回调时，调用这个callBack，实现回调
-    _weakSelf_SH
-    [self.jsBridge callH5Method:method data:data cookedJSStruct:^(NSString *jsText) {
-        _strongSelf_SH
-        [self invokeH5:jsText];
-    } callBack:responseCallback];
+    NSString *jsCmd = [self.jsBridge makeInvokeH5Cmd:method data:data callBack:responseCallback];
+    [self.wkWebView evaluateJavaScript:jsCmd completionHandler:^(id obj, NSError * error) {
+        if(error){
+            
+        }
+    }];
 }
 
 - (SHWebViewJSBridge *)jsBridge

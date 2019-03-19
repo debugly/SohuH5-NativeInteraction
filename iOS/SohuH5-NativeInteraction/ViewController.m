@@ -10,6 +10,14 @@
 #import "SHWebView.h"
 #import "SHLoginViewController.h"
 
+#ifndef _weakSelf_SH
+#define _weakSelf_SH     __weak   __typeof(self) $weakself = self;
+#endif
+
+#ifndef _strongSelf_SH
+#define _strongSelf_SH   __strong __typeof($weakself) self = $weakself;
+#endif
+
 @interface ViewController ()
 
 @property (nonatomic, weak) SHWebView *webView;
@@ -63,7 +71,7 @@
     NSString *uid = [NSString stringWithFormat:@"sohu-%d",random];
     _weakSelf_SH
     ///登录完毕之后，把uid更新给H5页面
-    [self.webView callH5Method:@"updateInfo" data:@{@"uid":uid} responseCallback:^(NSDictionary *ps) {
+    [self.webView invokeH5:@"updateInfo" data:@{@"uid":uid} responseCallback:^(NSDictionary *ps) {
         
         _strongSelf_SH
         //ps 则是H5收到Native调用之后回调回来的参数；

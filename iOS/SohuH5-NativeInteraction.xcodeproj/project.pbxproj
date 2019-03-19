@@ -46,12 +46,13 @@
 		B4E496541FA1B28A00583742 /* SHUIWebView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHUIWebView.h; sourceTree = "<group>"; };
 		B4E4965B1FA1B7B000583742 /* SHWeakProxy.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SHWeakProxy.m; sourceTree = "<group>"; };
 		B4E4965C1FA1B7B000583742 /* SHWeakProxy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SHWeakProxy.h; sourceTree = "<group>"; };
-		B4E4965E1FA1BA4000583742 /* SHWebViewHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SHWebViewHeader.h; sourceTree = "<group>"; };
+		B4E4965E1FA1BA4000583742 /* SHWebViewJSBridgeHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SHWebViewJSBridgeHeader.h; sourceTree = "<group>"; };
 		B4E4965F1FA1BC0200583742 /* ExampleApp.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = ExampleApp.html; sourceTree = "<group>"; };
 		B4E496611FA1DAF600583742 /* SHLoginViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SHLoginViewController.h; sourceTree = "<group>"; };
 		B4E496621FA1DAF600583742 /* SHLoginViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SHLoginViewController.m; sourceTree = "<group>"; };
 		B4E496641FA1E11400583742 /* ReadMe.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = ReadMe.md; sourceTree = "<group>"; };
 		B4E496671FA1F0E700583742 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		DD9CB02F2240FC75005C8D45 /* SHWebViewHeader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SHWebViewHeader.h; sourceTree = "<group>"; };
 		DDED43DE1FBA93970061C9D2 /* SHWebViewJSBridge+JS.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "SHWebViewJSBridge+JS.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -88,6 +89,7 @@
 		B4E496321FA198E500583742 /* SohuH5-NativeInteraction */ = {
 			isa = PBXGroup;
 			children = (
+				DD9CB02E2240FC1F005C8D45 /* WebView */,
 				B4E496491FA1B15900583742 /* H5-NativeInteraction */,
 				B4E496331FA198E500583742 /* AppDelegate.h */,
 				B4E496341FA198E500583742 /* AppDelegate.m */,
@@ -108,13 +110,7 @@
 		B4E496491FA1B15900583742 /* H5-NativeInteraction */ = {
 			isa = PBXGroup;
 			children = (
-				B4E496541FA1B28A00583742 /* SHUIWebView.h */,
-				B4E496521FA1B28A00583742 /* SHUIWebView.m */,
-				B4E4964C1FA1B28A00583742 /* SHWKWebView.h */,
-				B4E496501FA1B28A00583742 /* SHWKWebView.m */,
-				B4E4964A1FA1B28A00583742 /* SHWebView.h */,
-				B4E4964B1FA1B28A00583742 /* SHWebView.m */,
-				B4E4965E1FA1BA4000583742 /* SHWebViewHeader.h */,
+				B4E4965E1FA1BA4000583742 /* SHWebViewJSBridgeHeader.h */,
 				B4E496511FA1B28A00583742 /* SHWebViewJSBridge.h */,
 				B4E496531FA1B28A00583742 /* SHWebViewJSBridge.m */,
 				DDED43DE1FBA93970061C9D2 /* SHWebViewJSBridge+JS.m */,
@@ -138,6 +134,20 @@
 				B4E496671FA1F0E700583742 /* WebKit.framework */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		DD9CB02E2240FC1F005C8D45 /* WebView */ = {
+			isa = PBXGroup;
+			children = (
+				B4E496541FA1B28A00583742 /* SHUIWebView.h */,
+				B4E496521FA1B28A00583742 /* SHUIWebView.m */,
+				B4E4964C1FA1B28A00583742 /* SHWKWebView.h */,
+				B4E496501FA1B28A00583742 /* SHWKWebView.m */,
+				B4E4964A1FA1B28A00583742 /* SHWebView.h */,
+				B4E4964B1FA1B28A00583742 /* SHWebView.m */,
+				DD9CB02F2240FC75005C8D45 /* SHWebViewHeader.h */,
+			);
+			path = WebView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

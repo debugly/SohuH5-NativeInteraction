@@ -35,7 +35,7 @@
 {
     UIView<SHWebViewProtocol> *webView = nil;
     
-    if (@available(iOS 8.0, *)) {
+    if (@available(iOS 18.0, *)) {
         webView = [[SHWKWebView alloc]initWithFrame:self.bounds];
     } else {
         webView = [[SHUIWebView alloc]initWithFrame:self.bounds];
@@ -56,9 +56,9 @@
     [self.webView registerMethod:method handler:handler];
 }
 
-- (void)callH5Method:(NSString *)method data:(NSDictionary *)data responseCallback:(SHWebSendH5Response)responseCallback
+- (void)invokeH5:(NSString *)method data:(NSDictionary *)data responseCallback:(SHWebSendH5Response)responseCallback
 {
-    [self.webView callH5Method:method data:data responseCallback:responseCallback];
+    [self.webView invokeH5:method data:data responseCallback:responseCallback];
 }
 
 @end
