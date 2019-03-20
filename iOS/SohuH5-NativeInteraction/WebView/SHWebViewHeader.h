@@ -24,7 +24,7 @@
 @param method H5调用的方法名
 @param handler 接收到H5的参数,在主线程回调
 */
-- (void)registerMethod:(NSString *)method handler:(SHWebNativeHandler)handler;
+- (void)registerMethod:(NSString *)method handler:(SHJSBridgeOnH5Message)handler;
 
 
 /**
@@ -34,8 +34,7 @@
  @param ps 参数
  @param responseCallback H5的回调
  */
-- (void)invokeH5:(NSString*)method data:(NSDictionary *)ps responseCallback:(SHWebViewOnH5Response)responseCallback;
-
+- (void)invokeH5:(NSString*)method data:(NSDictionary *)ps responseCallback:(SHJSBridgeOnH5Response)responseCallback;
 
 
 @end

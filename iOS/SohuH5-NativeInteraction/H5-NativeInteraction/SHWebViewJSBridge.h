@@ -17,16 +17,16 @@
  @param method H5调用的方法名
  @param handler 接收到H5的参数,在主线程回调
  */
-- (void)registerMethod:(NSString *)method handler:(SHWebNativeHandler)handler;
+- (void)registerMethod:(NSString *)method handler:(SHJSBridgeOnH5Message)handler;
 
 /**
- 调用 H5 的方法
+ 构造调用 H5 方法的 js 脚本
 
  @param method 方法名
  @param data 参数
  @return 构造好的完整的js语句，接下来可交给 webview 控件发送出去！
  */
-- (NSString *)makeInvokeH5Cmd:(NSString *)method data:(NSDictionary *)data callBack:(SHWebViewOnH5Response)callback;
+- (NSString *)makeInvokeH5Cmd:(NSString *)method data:(NSDictionary *)data callBack:(SHJSBridgeOnH5Response)callback;
 
 /**
  统一处理消息通道发来的消息

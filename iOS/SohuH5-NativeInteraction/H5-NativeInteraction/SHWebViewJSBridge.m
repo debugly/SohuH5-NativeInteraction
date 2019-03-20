@@ -33,14 +33,14 @@
     return _callbackMap;
 }
 
-- (void)registerMethod:(NSString *)method handler:(SHWebNativeHandler)handler
+- (void)registerMethod:(NSString *)method handler:(SHJSBridgeOnH5Message)handler
 {
     if (method.length > 1 && handler) {
         [self.methodHandlerMap setObject:[handler copy] forKey:method];
     }
 }
 
-- (void)registerCallback:(NSString *)name callBack:(SHWebViewOnH5Response)callback
+- (void)registerCallback:(NSString *)name callBack:(SHJSBridgeOnH5Response)callback
 {
     if (name.length > 1) {
         if (callback) {
@@ -51,8 +51,9 @@
     }
 }
 
-- (NSString *)makeInvokeH5Cmd:(NSString *)method data:(NSDictionary *)data callBack:(SHWebViewOnH5Response)callback
+- (NSString *)makeInvokeH5Cmd:(NSString *)method data:(NSDictionary *)data callBack:(SHJSBridgeOnH5Response)callback
 {
+    ///保存住该callBack；当H5回调时，调用这个callBack，实现回调
     [self registerCallback:method callBack:callback];
     NSString *cmd = [self packageCmd:SHWebViewJSBridgeMessageTypeMethod method:method data:data];
     return cmd;
@@ -60,9 +61,9 @@
 
 - (void)invokeNativeMethod:(NSString *)method parameter:(NSDictionary *)ps callBack:(void(^)(NSString *jsonText))callBackBlock
 {
-    SHWebNativeHandler handler = self.methodHandlerMap[method];
+    SHJSBridgeOnH5Message handler = self.methodHandlerMap[method];
     if (handler) {
-        SHWebSendH5Response callBack = ^(NSDictionary *data){
+        SHJSBridgeSendResponse callBack = ^(NSDictionary *data){
             if (callBackBlock) {
                 NSString *jsonText = [self packageCmd:SHWebViewJSBridgeMessageTypeHandler
                                                method:method

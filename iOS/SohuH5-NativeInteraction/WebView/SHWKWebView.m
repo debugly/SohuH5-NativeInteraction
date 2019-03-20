@@ -167,15 +167,16 @@
     }];
 }
 
-- (void)registerMethod:(NSString *)method handler:(SHWebNativeHandler)handler
+- (void)registerMethod:(NSString *)method handler:(SHJSBridgeOnH5Message)handler
 {
     [self.jsBridge registerMethod:method handler:handler];
 }
 
-- (void)invokeH5:(NSString *)method data:(NSDictionary *)data responseCallback:(SHWebViewOnH5Response)responseCallback
+- (void)invokeH5:(NSString *)method data:(NSDictionary *)data responseCallback:(SHJSBridgeOnH5Response)responseCallback
 {
-    ///保存住该callBack；当H5回调时，调用这个callBack，实现回调
+    /// 构造 js 脚本
     NSString *jsCmd = [self.jsBridge makeInvokeH5Cmd:method data:data callBack:responseCallback];
+    /// 通过 webView 执行 js 脚本
     [self.wkWebView evaluateJavaScript:jsCmd completionHandler:^(id obj, NSError * error) {
         if(error){
             

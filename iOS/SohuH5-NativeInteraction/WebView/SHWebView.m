@@ -51,12 +51,12 @@
     [self.webView loadURL:url];
 }
 
-- (void)registerMethod:(NSString *)method handler:(SHWebNativeHandler)handler
+- (void)registerMethod:(NSString *)method handler:(SHJSBridgeOnH5Message)handler
 {
     [self.webView registerMethod:method handler:handler];
 }
 
-- (void)invokeH5:(NSString *)method data:(NSDictionary *)data responseCallback:(SHWebSendH5Response)responseCallback
+- (void)invokeH5:(NSString *)method data:(NSDictionary *)data responseCallback:(SHJSBridgeSendResponse)responseCallback
 {
     [self.webView invokeH5:method data:data responseCallback:responseCallback];
 }

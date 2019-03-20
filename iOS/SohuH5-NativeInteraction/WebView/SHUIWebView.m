@@ -145,12 +145,12 @@ JSExportAs(h5InvokeNative, - (void)h5InvokeNative:(NSString *)json);
     [self loadRequest:[NSURLRequest requestWithURL:url]];
 }
 
-- (void)registerMethod:(NSString *)method handler:(SHWebNativeHandler)handler
+- (void)registerMethod:(NSString *)method handler:(SHJSBridgeOnH5Message)handler
 {
     [self.jsBridge registerMethod:method handler:handler];
 }
 
-- (void)invokeH5:(NSString *)method data:(NSDictionary *)data responseCallback:(SHWebViewOnH5Response)responseCallback
+- (void)invokeH5:(NSString *)method data:(NSDictionary *)data responseCallback:(SHJSBridgeOnH5Response)responseCallback
 {
     NSString *jsCmd = [self.jsBridge makeInvokeH5Cmd:method data:data callBack:responseCallback];
     [self.uiWebView stringByEvaluatingJavaScriptFromString:jsCmd];

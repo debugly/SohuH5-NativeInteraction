@@ -97,7 +97,7 @@
 {
     _weakSelf_SH
     ///H5可调用showMsg方法，并接收传过来参数: text
-    [self.webView registerMethod:@"showMsg" handler:^(NSDictionary *ps, SHWebSendH5Response callback) {
+    [self.webView registerMethod:@"showMsg" handler:^(NSDictionary *ps, SHJSBridgeSendResponse callback) {
         _strongSelf_SH
         self.info.text = ps[@"text"];
         UIColor *randomColor = [UIColor colorWithRed:arc4random() % 256/255.0 green:arc4random() % 256/255.0 blue:arc4random() % 256/255.0 alpha:1];
@@ -107,7 +107,7 @@
     }];
     
     ///H5可调用openLoginPage方法，并接收传过来参数: from
-    [self.webView registerMethod:@"openLoginPage" handler:^(NSDictionary *ps, SHWebSendH5Response callback) {
+    [self.webView registerMethod:@"openLoginPage" handler:^(NSDictionary *ps, SHJSBridgeSendResponse callback) {
         
         _strongSelf_SH
         
