@@ -55,6 +55,17 @@
         info.autoresizingMask = UIViewAutoresizingFlexibleTopMargin | UIViewAutoresizingFlexibleWidth;
         self.info = info;
     }
+    
+    [NSTimer scheduledTimerWithTimeInterval:3 repeats:YES block:^(NSTimer * _Nonnull timer) {
+        static int flag = 1;
+        [self.webView invokeH5Once:@"testInvokeH5Once"
+                              data:@{
+                                     @"flag":@(flag++)
+                                     }
+                  responseCallback:^(NSDictionary *ps) {
+                      NSLog(@"after testInvokeH5Once:%@",ps);
+                  }];
+    }];
 }
 
 - (NSURL *)h5_url
@@ -123,6 +134,12 @@
         }];
         
         [self.navigationController pushViewController:loginVC animated:YES];
+    }];
+    
+    [self.webView registerMethod:@"sendRequest" handler:^(NSDictionary *ps, SHJSBridgeSendResponse callback) {
+        ///登录完毕之后，把 uid 回调给H5！
+        
+        callback(ps);
     }];
 }
 

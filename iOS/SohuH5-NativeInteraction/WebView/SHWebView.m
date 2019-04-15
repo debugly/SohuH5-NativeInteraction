@@ -61,4 +61,9 @@
     [self.webView invokeH5:method data:data responseCallback:responseCallback];
 }
 
+- (void)invokeH5Once:(NSString *)method data:(NSDictionary *)data responseCallback:(SHJSBridgeOnH5Response)responseCallback
+{
+    [self.webView invokeH5Once:method data:data responseCallback:responseCallback];
+}
+
 @end

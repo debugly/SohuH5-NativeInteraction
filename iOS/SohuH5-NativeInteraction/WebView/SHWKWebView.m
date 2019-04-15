@@ -175,7 +175,19 @@
 - (void)invokeH5:(NSString *)method data:(NSDictionary *)data responseCallback:(SHJSBridgeOnH5Response)responseCallback
 {
     /// 构造 js 脚本
-    NSString *jsCmd = [self.jsBridge makeInvokeH5Cmd:method data:data callBack:responseCallback];
+    NSString *jsCmd = [self.jsBridge makeInvokeH5Cmd:method data:data callBack:responseCallback once:NO];
+    /// 通过 webView 执行 js 脚本
+    [self.wkWebView evaluateJavaScript:jsCmd completionHandler:^(id obj, NSError * error) {
+        if(error){
+            
+        }
+    }];
+}
+
+- (void)invokeH5Once:(NSString *)method data:(NSDictionary *)data responseCallback:(SHJSBridgeOnH5Response)responseCallback
+{
+    /// 构造 js 脚本
+    NSString *jsCmd = [self.jsBridge makeInvokeH5Cmd:method data:data callBack:responseCallback once:YES];
     /// 通过 webView 执行 js 脚本
     [self.wkWebView evaluateJavaScript:jsCmd completionHandler:^(id obj, NSError * error) {
         if(error){

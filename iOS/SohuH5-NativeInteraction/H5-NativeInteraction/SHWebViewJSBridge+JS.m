@@ -52,19 +52,24 @@
                 var jsBridge = {};
                 ///存储 H5 注册的方法；
                 jsBridge.methodHandler = {};
-                ///存储 H5 方法的回调callback，即H5调用Native后，通过此callback收到响应
+                ///存储 H5 方法的回调callback，即H5调用Native后，通过此callback收到响应；
                 jsBridge.responseCallbacks = {};
-                
+                ///方法标识，为设计一对一回调而加；
+                jsBridge.mid = 1;
                 
                 //----------------------H5 register method--------------------//
                 
                 jsBridge.registerMethod = function(handlerName, handler) {
-                    this.methodHandler[handlerName] = handler;
+                    if (handler) {
+                        this.methodHandler[handlerName] = handler;
+                    } else {
+                        delete this.methodHandler[handlerName];
+                    }
                 };
                 
                 ///之前叫这个名字；兼容老版本而已；
                 jsBridge.registerHandler = function(handlerName, handler) {
-                    this.methodHandler[handlerName] = handler;
+                    this.registerMethod(handlerName, handler);
                 };
                 
                 //----------------------H5 invoke Native begin--------------------//
@@ -94,26 +99,40 @@
                 jsBridge.doSend = function(message, responseCallback) {
                     ///需要Native的回调,那么就把回调保存下
                     if (responseCallback) {
-                        var method = message['method'];
-                        this.responseCallbacks[method] = responseCallback;
+                        var key = message['method'];
+                        if (message['once']) {
+                            this.mid ++;
+                            key += this.mid;
+                            message['mid'] = this.mid;
+                        }
+                        this.responseCallbacks[key] = responseCallback;
                     }
                     this.doInvokeNative('method',message);
                 };
                 
+                jsBridge._invokeNative = function(handlerName, once, data, responseCallback){
+                    var args = arguments.length;
+                    if(args == 2){
+                        this.doSend({ method:handlerName, data:{}, once:once });
+                    }else if (args == 3) {
+                        if(typeof data == 'function'){
+                            this.doSend({ method:handlerName, data:{}, once:once },data);
+                        }else{
+                            this.doSend({ method:handlerName, data:data, once:once });
+                        }
+                    }else if(args == 4){
+                        this.doSend({ method:handlerName, data:data, once:once }, responseCallback);
+                    }
+                };
+                
                 ///支持可选参数
                 jsBridge.invokeNative = function(handlerName, data, responseCallback){
-                    var args = arguments.length;
-                    if(args == 1){
-                        this.doSend({ method:handlerName, data:{} });
-                    }else if (args == 2) {
-                        if(typeof data == 'function'){
-                            this.doSend({ method:handlerName, data:{} },data);
-                        }else{
-                            this.doSend({ method:handlerName, data:data });
-                        }
-                    }else if(args == 3){
-                        this.doSend({ method:handlerName, data:data }, responseCallback);
-                    }
+                    this._invokeNative(handlerName,0,data,responseCallback);
+                };
+                
+                ///支持可选参数
+                jsBridge.invokeNativeOnce = function(handlerName, data, responseCallback){
+                    this._invokeNative(handlerName,1,data,responseCallback);
                 };
                 
                 ///H5 试探方法能否被调用
@@ -124,7 +143,7 @@
                     m['data'] = {};
                     if (responseCallback) {
                         this.responseCallbacks[method] = responseCallback;
-                        window.__h5BridgeName__.doInvokeNative('invokeTest',m);
+                        this.doInvokeNative('invokeTest',m);
                     }
                 };
                 
@@ -145,11 +164,20 @@
                 ///调用注册的回调方法
                 jsBridge.invokeH5Handler = function(message){
                     var handlerName = message['method'];
+                    var clean = 0;
+                    if (message['mid']) {
+                        handlerName += message['mid'];
+                        clean = 1;
+                    }
                     var json = message['data'];
-                    var callback = window.__h5BridgeName__.responseCallbacks[handlerName];
+                    var callback = this.responseCallbacks[handlerName];
                     
                     if(callback){
                         callback(json);
+                        ///对于 once 类型，把 callback 回调清理掉；
+                        if (clean) {
+                            delete this.responseCallbacks[handlerName];
+                        }
                     }
                 };
                 
@@ -159,17 +187,23 @@
                     var method = message['method'];
                     
                     ///寻找下H5有没有注册这个方法
-                    var callback = window.__h5BridgeName__.methodHandler[method];
+                    var callback = this.methodHandler[method];
                     if(callback){
                         
                         var json = message['data'];
+                        var mid  = message['mid'];
+                        var self = this;
                         callback(json,function(data){
                             ///H5给Native一个回调；
                             var m = {};
                             m['method'] = method;
                             m['data'] = data ? data : {};
-                            window.__h5BridgeName__.doInvokeNative('handler',m);
-                        });
+                            if (mid) {
+                                m['mid'] = mid;
+                                m['once'] = 1;
+                            }
+                            this.doInvokeNative('handler',m);
+                        }.bind(this));
                     }
                 };
                 

@@ -11,6 +11,9 @@
 
 @interface SHWebViewJSBridge : NSObject
 
+//消息id
+@property (nonatomic, assign) long mid;
+
 /**
  注册方法，等待H5端调用
  
@@ -24,10 +27,10 @@
 
  @param method 方法名
  @param data 参数
+ @param once 是否一次性
  @return 构造好的完整的js语句，接下来可交给 webview 控件发送出去！
  */
-- (NSString *)makeInvokeH5Cmd:(NSString *)method data:(NSDictionary *)data callBack:(SHJSBridgeOnH5Response)callback;
-
+- (NSString *)makeInvokeH5Cmd:(NSString *)method data:(NSDictionary *)data callBack:(SHJSBridgeOnH5Response)callback once:(BOOL)once;
 /**
  统一处理消息通道发来的消息
 

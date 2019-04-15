@@ -26,7 +26,6 @@
 */
 - (void)registerMethod:(NSString *)method handler:(SHJSBridgeOnH5Message)handler;
 
-
 /**
  调用 H5 的方法
  
@@ -35,6 +34,15 @@
  @param responseCallback H5的回调
  */
 - (void)invokeH5:(NSString*)method data:(NSDictionary *)ps responseCallback:(SHJSBridgeOnH5Response)responseCallback;
+
+/**
+ 一次性调用 H5 的方法
+ 
+ @param method 方法名
+ @param ps 参数
+ @param responseCallback H5的回调
+ */
+- (void)invokeH5Once:(NSString*)method data:(NSDictionary *)ps responseCallback:(SHJSBridgeOnH5Response)responseCallback;
 
 
 @end

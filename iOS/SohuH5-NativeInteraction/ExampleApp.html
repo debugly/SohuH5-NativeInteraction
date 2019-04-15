@@ -65,6 +65,7 @@
             <button class="btn" onclick="canInvokeNative('showMsg')">测试canInvokeNative？</button>
             <button class="btn" onclick="callNativeShowMsg()">调用Native的showMsg方法</button>
             <button class="btn" onclick="openLoginPage()">打开Native的登录页</button>
+            <button class="btn" onclick="invokeOnce()">测试 invokeOnce </button>
         </div>
 
         <div class="logs">
@@ -140,16 +141,34 @@
             });
         }
 
+        function invokeOnce(){
+            setupSHJSBridge(function (bridge) {
+                            var method = "sendRequest";
+                            printlog("invoke【" + method + "】");
+                            bridge.invokeNativeOnce(method, { "from": "100" }, function (json) {
+                                                printlog("after invoke【" + method + "】，recv obj : " + json);
+                                                });
+                            });
+        }
+    
         ///注册方法，等着Native调用；
         setupSHJSBridge(function (bridge) {
 
             bridge.registerMethod('updateInfo', function (data, responseCallback) {
 
-                printlog('收到Native发来的uid：' + data['uid']);
+                printlog('收到Native发来的uid:' + data['uid']);
                 var random = Math.floor(Math.random() * 1000);
                 var responseData = { "text": random + '' };
                 responseCallback(responseData);
             });
+                  
+            bridge.registerMethod('testInvokeH5Once', function (data, responseCallback) {
+                                  
+                                  printlog('testInvokeH5Once:' + data['flag']);
+                                  var random = Math.floor(Math.random() * 1000);
+                                  var responseData = { 'text': random + '','flag':data['flag'] };
+                                  responseCallback(responseData);
+                                  });
         });
         ///测试下在页面还没加载完毕的时候就调用Native的方法
         canInvokeNative('aaa');

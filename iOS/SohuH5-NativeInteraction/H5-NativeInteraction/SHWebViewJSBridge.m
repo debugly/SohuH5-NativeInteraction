@@ -51,15 +51,20 @@
     }
 }
 
-- (NSString *)makeInvokeH5Cmd:(NSString *)method data:(NSDictionary *)data callBack:(SHJSBridgeOnH5Response)callback
+- (NSString *)makeInvokeH5Cmd:(NSString *)method data:(NSDictionary *)data callBack:(SHJSBridgeOnH5Response)callback once:(BOOL)once
 {
+    NSNumber *mid = once ? @(++self.mid) : nil;
     ///保存住该callBack；当H5回调时，调用这个callBack，实现回调
-    [self registerCallback:method callBack:callback];
-    NSString *cmd = [self packageCmd:SHWebViewJSBridgeMessageTypeMethod method:method data:data];
+    NSString *key = method;
+    if (mid) {
+        key = [key stringByAppendingFormat:@"%@",mid];
+    }
+    [self registerCallback:key callBack:callback];
+    NSString *cmd = [self packageCmd:SHWebViewJSBridgeMessageTypeMethod method:method data:data mid:mid];
     return cmd;
 }
 
-- (void)invokeNativeMethod:(NSString *)method parameter:(NSDictionary *)ps callBack:(void(^)(NSString *jsonText))callBackBlock
+- (void)invokeNativeMethod:(NSString *)method parameter:(NSDictionary *)ps callBack:(void(^)(NSString *jsonText))callBackBlock mid:(NSNumber *)mid
 {
     SHJSBridgeOnH5Message handler = self.methodHandlerMap[method];
     if (handler) {
@@ -67,7 +72,8 @@
             if (callBackBlock) {
                 NSString *jsonText = [self packageCmd:SHWebViewJSBridgeMessageTypeHandler
                                                method:method
-                                                 data:data];
+                                                 data:data
+                                                  mid:mid];
                 callBackBlock(jsonText);
             }
         };
@@ -103,6 +109,16 @@
      };
      type = method;
  }
+ 
+ {
+     "type":"method",
+     "message":{
+        "method":"sendRequest",
+        "data":{"from":"100"},
+        "once":1,
+        "mid":6
+     }
+ }
  */
 - (void)handleH5Message:(id)json callBack:(void(^)(NSString *cmd))callBackBlock
 {
@@ -122,16 +138,24 @@
     NSDictionary *message = body[@"message"];
     NSString *method = message[@"method"];
     NSDictionary *data = message[@"data"];
+    NSNumber *mid = message[@"mid"];
     
     ///h5调用Native的method方法
     if([type isEqualToString:@"method"]){
-        [self invokeNativeMethod:method parameter:data callBack:callBackBlock];
+        [self invokeNativeMethod:method parameter:data callBack:callBackBlock mid:mid];
     }
     ///Native调用了h5之后，h5回调Native的handle方法
     else if([type isEqualToString:@"handler"]){
-        void (^handler)(NSDictionary *json) = self.callbackMap[method];
+        NSString *key = method;
+        if (mid) {
+            key = [key stringByAppendingFormat:@"%@",mid];
+        }
+        void (^handler)(NSDictionary *json) = self.callbackMap[key];
         if (handler) {
             handler(data);
+            if (mid) {
+                self.callbackMap[key] = nil;
+            }
         }
     }
     ///测试下 Native 是否支持了某个方法
@@ -140,15 +164,16 @@
         NSString *data = [[self.methodHandlerMap allKeys]containsObject:method] ? @"1" : @"0";
         
         NSString *cmd = [self packageCmd:SHWebViewJSBridgeMessageTypeHandler
-                                           method:method
-                                             data:data];
+                                  method:method
+                                    data:data
+                                     mid:mid];
         callBackBlock(cmd);
     }
 }
 
 #pragma mark - 构造发送给H5的结构体
 ////协议相关
-- (NSString *)_packageMessage:(SHWebViewJSBridgeMessageType) messageType method:(NSString *)method data:(id)data
+- (NSString *)_packageMessage:(SHWebViewJSBridgeMessageType) messageType method:(NSString *)method data:(id)data mid:(NSNumber *)mid
 {
     NSMutableDictionary *m = [NSMutableDictionary dictionary];
     
@@ -165,7 +190,13 @@
     NSMutableDictionary *message = [NSMutableDictionary dictionary];
     [message setObject:method forKey:@"method"];
     
-    ///3,确定参数
+    ///3,确定消息id参数
+    if (mid) {
+        [message setObject:@(1) forKey:@"once"];
+        [message setObject:mid forKey:@"mid"];
+    }
+
+    ///4,确定参数
     if (data) {
         [message setObject:data forKey:@"data"];
     }
@@ -177,9 +208,9 @@
     return josnText;
 }
 
-- (NSString *)packageCmd:(SHWebViewJSBridgeMessageType) messageType method:(NSString *)method data:(id)data
+- (NSString *)packageCmd:(SHWebViewJSBridgeMessageType) messageType method:(NSString *)method data:(id)data mid:(NSNumber *)mid
 {
-    NSString *msg = [self _packageMessage:messageType method:method data:data];
+    NSString *msg = [self _packageMessage:messageType method:method data:data mid:mid];
     return [[self class] makeInvokeH5Cmd:msg];
 }
 
