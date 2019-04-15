@@ -126,13 +126,32 @@
                 };
                 
                 ///支持可选参数
-                jsBridge.invokeNative = function(handlerName, data, responseCallback){
-                    this._invokeNative(handlerName,0,data,responseCallback);
+                jsBridge.invokeNative = function(handlerName, data, responseCallback) {
+                    var args = arguments.length;
+                    var once = 0;
+                    if(args == 3){
+                        this._invokeNative(handlerName, once, data, responseCallback);
+                    } else if(args == 2){
+                        if(typeof data == 'function'){
+                            this._invokeNative(handlerName, once, data);
+                        } else {
+                            this._invokeNative(handlerName, once, data);
+                        }
+                    }
                 };
                 
-                ///支持可选参数
-                jsBridge.invokeNativeOnce = function(handlerName, data, responseCallback){
-                    this._invokeNative(handlerName,1,data,responseCallback);
+                jsBridge.invokeNativeOnce = function(handlerName, data, responseCallback) {
+                    var args = arguments.length;
+                    var once = 1;
+                    if(args == 3){
+                        this._invokeNative(handlerName, once, data, responseCallback);
+                    } else if(args == 2){
+                        if(typeof data == 'function'){
+                            this._invokeNative(handlerName, once, data);
+                        } else {
+                            this._invokeNative(handlerName, once, data);
+                        }
+                    }
                 };
                 
                 ///H5 试探方法能否被调用
