@@ -3,7 +3,7 @@
 //  SohuH5-NativeInteraction
 //
 //  Created by 许乾隆 on 2017/10/26.
-//  Copyright © 2017年 sohu-inc. All rights reserved.
+//  Copyright © 2017年 debugly.cn. All rights reserved.
 //
 
 #import "ViewController.h"
@@ -79,7 +79,7 @@
 - (IBAction)callH5Method:(UIBarButtonItem *)sender
 {
     int random = arc4random() % 1000;
-    NSString *uid = [NSString stringWithFormat:@"sohu-%d",random];
+    NSString *uid = [NSString stringWithFormat:@"hu-%d",random];
     _weakSelf_SH
     ///登录完毕之后，把uid更新给H5页面
     [self.webView invokeH5:@"updateInfo" data:@{@"uid":uid} responseCallback:^(NSDictionary *ps) {

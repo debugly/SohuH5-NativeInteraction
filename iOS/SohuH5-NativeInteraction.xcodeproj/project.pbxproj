@@ -393,7 +393,7 @@
 				INFOPLIST_FILE = "SohuH5-NativeInteraction/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.sohu.SohuH5-NativeInteraction";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.debugly.SohuH5-NativeInteraction";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "7b154ace-d434-44d3-b7e5-f338e5fdce14";
 				PROVISIONING_PROFILE_SPECIFIER = Any_Develop_PP;
@@ -411,7 +411,7 @@
 				INFOPLIST_FILE = "SohuH5-NativeInteraction/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 7.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.sohu.SohuH5-NativeInteraction";
+				PRODUCT_BUNDLE_IDENTIFIER = "com.debugly.SohuH5-NativeInteraction";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "7b154ace-d434-44d3-b7e5-f338e5fdce14";
 				PROVISIONING_PROFILE_SPECIFIER = Any_Project_PP;

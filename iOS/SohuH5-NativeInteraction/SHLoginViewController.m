@@ -3,7 +3,7 @@
 //  SohuH5-NativeInteraction
 //
 //  Created by 许乾隆 on 2017/10/26.
-//  Copyright © 2017年 sohu-inc. All rights reserved.
+//  Copyright © 2017年 debugly.cn. All rights reserved.
 //
 
 #import "SHLoginViewController.h"
@@ -40,7 +40,7 @@
 
 - (void)done:(UIButton *)sender
 {
-    self.completion(@"qianlongxu@sohu-inc.com");
+    self.completion(@"qianlongxu@gmail.com");
 }
 
 /*

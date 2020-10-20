@@ -3,7 +3,7 @@
 //  SohuH5-NativeInteraction
 //
 //  Created by 许乾隆 on 2017/10/26.
-//  Copyright © 2017年 sohu-inc. All rights reserved.
+//  Copyright © 2017年 debugly.cn. All rights reserved.
 //
 // 傀儡代理，防止持有target；内部做消息转发；常结合NSTimer使用；
 

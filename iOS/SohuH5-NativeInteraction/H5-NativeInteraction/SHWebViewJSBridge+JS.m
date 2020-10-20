@@ -3,7 +3,7 @@
 //  SohuH5-NativeInteraction
 //
 //  Created by 许乾隆 on 2017/11/14.
-//  Copyright © 2017年 sohu-inc. All rights reserved.
+//  Copyright © 2017年 debugly.cn. All rights reserved.
 //
 
 /*
@@ -132,11 +132,7 @@
                     if(args == 3){
                         this._invokeNative(handlerName, once, data, responseCallback);
                     } else if(args == 2){
-                        if(typeof data == 'function'){
-                            this._invokeNative(handlerName, once, data);
-                        } else {
-                            this._invokeNative(handlerName, once, data);
-                        }
+                        this._invokeNative(handlerName, once, data);
                     }
                 };
                 
@@ -146,11 +142,7 @@
                     if(args == 3){
                         this._invokeNative(handlerName, once, data, responseCallback);
                     } else if(args == 2){
-                        if(typeof data == 'function'){
-                            this._invokeNative(handlerName, once, data);
-                        } else {
-                            this._invokeNative(handlerName, once, data);
-                        }
+                        this._invokeNative(handlerName, once, data);
                     }
                 };
                 

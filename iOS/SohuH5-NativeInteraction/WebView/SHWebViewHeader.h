@@ -3,7 +3,7 @@
 //  SohuH5-NativeInteraction
 //
 //  Created by Matt Reach on 2019/3/19.
-//  Copyright © 2019 sohu-inc. All rights reserved.
+//  Copyright © 2019 debugly.cn. All rights reserved.
 //
 
 #ifndef SHWebViewHeader_h
